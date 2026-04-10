@@ -82,7 +82,8 @@ async function showCategoryItems(categoryName) {
     const { data, error } = await dbClient
         .from('listings')
         .select('*')
-        .eq('type', categoryName) // Match case with your DB (e.g., 'Repair')
+        // FIX 1: Use ilike for case-insensitive search (Repair == repair)
+        .ilike('type', categoryName) 
         .eq('status', 'active');
 
     if (error) {
@@ -101,7 +102,7 @@ async function showCategoryItems(categoryName) {
     } else {
         listHtml += `<div class="grid-2">`;
         data.forEach(item => {
-            // FIX: Changed from tg.showAlert to viewListingDetail
+            // FIX 2: Changed from showAlert to viewListingDetail
             listHtml += `
                 <div class="card" onclick="viewListingDetail('${item.id}')" style="cursor:pointer;">
                     <div style="font-size:30px">📦</div>
@@ -114,6 +115,7 @@ async function showCategoryItems(categoryName) {
 
     main.innerHTML = `<div style="padding:15px;">${listHtml}</div>`;
 }
+
 
 
 function renderManualAddressForm() {
