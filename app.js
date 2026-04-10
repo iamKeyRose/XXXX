@@ -228,6 +228,33 @@ async function viewListingDetail(listingId) {
     renderProfileDetail(data);
 }
 
+async function saveProfileUpdates() {
+    const userId = tg.initDataUnsafe?.user?.id;
+    const updatedData = {
+        first_name: document.getElementById('edit-name').value,
+        bio: document.getElementById('edit-bio').value,
+        phone: document.getElementById('edit-phone').value
+    };
+
+    tg.MainButton.showProgress();
+
+    const { error } = await dbClient
+        .from('users')
+        .update(updatedData)
+        .eq('tg_id', userId);
+
+    if (error) {
+        tg.showAlert("Update failed: " + error.message);
+    } else {
+        tg.HapticFeedback.notificationOccurred('success');
+        tg.showAlert("Profile updated successfully!");
+        openMyProfile(); // Refresh the view
+    }
+    
+    tg.MainButton.hideProgress();
+}
+
+
 
 // Add this to app.js
 window.viewListingDetail = async function(listingId) {
