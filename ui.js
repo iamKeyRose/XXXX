@@ -37,6 +37,32 @@ function renderRoleSelection() {
         </div>`;
 }
 
+function renderPostForm(type) {
+    const main = document.getElementById('main-content');
+    const label = type.charAt(0).toUpperCase() + type.slice(1);
+
+    main.innerHTML = `
+        <div style="padding: 10px;">
+            <button onclick="renderDashboard()" style="background:none; border:none; color:var(--primary); font-weight:bold; margin-bottom:15px;">← Back</button>
+            <h3>Post new ${label}</h3>
+            
+            <div class="card" style="text-align:left; padding:20px;">
+                <label style="font-size:12px; color:#888;">Title / Specialty</label>
+                <input type="text" id="post-title" placeholder="e.g. Expert Electrician" style="width:100%; padding:12px; margin:8px 0 15px 0; border:1px solid #ddd; border-radius:10px;">
+                
+                <label style="font-size:12px; color:#888;">Description</label>
+                <textarea id="post-desc" rows="4" placeholder="Describe your service or needs..." style="width:100%; padding:12px; margin:8px 0 15px 0; border:1px solid #ddd; border-radius:10px; font-family:sans-serif;"></textarea>
+                
+                <label style="font-size:12px; color:#888;">Price (ETB)</label>
+                <input type="number" id="post-price" placeholder="0.00" style="width:100%; padding:12px; margin:8px 0 20px 0; border:1px solid #ddd; border-radius:10px;">
+                
+                <button class="auth-btn" style="width:100%" onclick="submitPost('${type}')">Publish Post</button>
+            </div>
+        </div>
+    `;
+}
+
+
 function renderManualAddressForm() {
     document.getElementById('main-content').innerHTML = `
         <div style="padding: 20px;"><h3>📍 Set Address</h3>
