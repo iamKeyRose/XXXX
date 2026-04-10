@@ -7,21 +7,55 @@ let userSession = {
     location: null
 };
 
+let carouselInterval; // Move this to the top with other globals
+
+// Corrected Init: Combined both into one single function
 function init() {
     tg.ready();
     tg.expand();
     tg.setHeaderColor('#ffffff');
+    
+    // Initial Render
     renderDashboard();
+    
+    // Start the timer after the dashboard is rendered
+    startCarouselTimer();
 }
 
+/* --- CAROUSEL LOGIC --- */
+function startCarouselTimer() {
+    const track = document.getElementById('ad-track');
+    // If we are on a registration screen, the track won't exist. 
+    // This check prevents errors.
+    if (!track) return;
+
+    if (carouselInterval) clearInterval(carouselInterval);
+
+    carouselInterval = setInterval(() => {
+        const slideWidth = track.offsetWidth;
+        const totalWidth = track.scrollWidth;
+        const currentScroll = track.scrollLeft;
+
+        if (currentScroll + slideWidth >= totalWidth - 5) {
+            track.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+            track.scrollBy({ left: slideWidth, behavior: 'smooth' });
+        }
+    }, 3000); 
+}
+
+/* --- REGISTRATION FLOW --- */
 function startRegistration() {
+    // Stop the timer when moving to registration screens 
+    // so it doesn't try to scroll something that isn't there
+    if (carouselInterval) clearInterval(carouselInterval);
     renderRoleSelection();
 }
 
 function setRole(role) {
     userSession.role = role;
     tg.HapticFeedback.impactOccurred('medium');
-    
+
     const options = role === 'guest' 
         ? ['Individual Buyer', 'Company Buyer'] 
         : ['Professional', 'Company/Agency'];
@@ -78,7 +112,11 @@ function saveManualAddress() {
 
 function completeRegistration() {
     tg.showAlert("Welcome to Habesha Hub!");
-    renderDashboard(); // Re-renders with the "Verified" tick
+    renderDashboard();
+    
+    // IMPORTANT: Restart the timer here because renderDashboard 
+    // creates a brand new 'ad-track' element.
+    startCarouselTimer();
 }
 
 function handleAction(msg) {
@@ -86,44 +124,5 @@ function handleAction(msg) {
     tg.showAlert('Selected: ' + msg);
 }
 
-/* --- app.js --- */
-
-let carouselInterval;
-
-function startCarouselTimer() {
-    const track = document.getElementById('ad-track');
-    if (!track) return;
-
-    // Clear any existing timer to prevent double-speeding
-    if (carouselInterval) clearInterval(carouselInterval);
-
-    carouselInterval = setInterval(() => {
-        const slideWidth = track.offsetWidth;
-        const totalWidth = track.scrollWidth;
-        const currentScroll = track.scrollLeft;
-
-        // Logic: If at the last slide, jump back to the start
-        // We use a 5px buffer to account for sub-pixel rounding
-        if (currentScroll + slideWidth >= totalWidth - 5) {
-            track.scrollTo({
-                left: 0,
-                behavior: 'smooth' 
-            });
-        } else {
-            track.scrollBy({
-                left: slideWidth,
-                behavior: 'smooth'
-            });
-        }
-    }, 3000); // 3 seconds per slide
-}
-
-// Call this inside your init() or after renderDashboard()
-function init() {
-    tg.ready();
-    renderDashboard();
-    startCarouselTimer();
-}
-
-
+// Single event listener for the single init function
 window.addEventListener('load', init);
