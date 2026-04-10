@@ -1,34 +1,34 @@
-:root {
-    --primary: #2481cc;
-    --bg: #ffffff;
-    --secondary-bg: #f5f7fa;
-    --text: #1a1a1a;
-    --shadow: 0 4px 15px rgba(0,0,0,0.08);
-}
-
-body {
-    margin: 0;
-    padding: 0;
-    font-family: -apple-system, system-ui, sans-serif;
-    background-color: var(--secondary-bg);
-    color: var(--text);
+/* Base Layout */
+#app-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
 }
 
 #main-content {
+    flex: 1;
+    overflow-y: auto; /* Enables scrolling */
     padding: 16px;
-    overflow-y: auto;
+    background-color: #f8f9fa; /* Light grey modern background */
 }
 
-/* CAROUSEL */
+/* Modern Header */
+header {
+    background: white;
+    padding: 15px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+}
+
+/* Carousel (Ad Box) */
 .carousel-container {
-    width: 100%;
-    height: 160px;
-    overflow-x: auto;
     display: flex;
+    overflow-x: auto;
     scroll-snap-type: x mandatory;
-    border-radius: 18px;
+    border-radius: 15px;
     margin-bottom: 20px;
-    box-shadow: var(--shadow);
+    height: 150px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
 .ad-slide {
@@ -38,99 +38,32 @@ body {
     align-items: center;
     justify-content: center;
     color: white;
-    font-weight: bold;
+    font-size: 20px;
 }
 
-/* AUTH CARD */
-.auth-card {
-    background: white;
-    padding: 20px;
-    border-radius: 18px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 25px;
-    box-shadow: var(--shadow);
-}
-
-.auth-btn {
-    background: var(--primary);
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 12px;
-    font-weight: 600;
-}
-
-/* CATEGORY GRID */
+/* Service Grid (3 columns for 12 items) */
 .category-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
-    margin-bottom: 25px;
-}
-
-.cat-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    grid-template-columns: repeat(4, 1fr); /* 4 items per row */
+    gap: 15px;
+    margin: 15px 0;
 }
 
 .icon-circle {
     width: 60px;
     height: 60px;
     background: white;
-    border-radius: 18px; /* Squircle */
+    border-radius: 18px; /* Modern "Squircle" */
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 28px;
-    box-shadow: var(--shadow);
-    margin-bottom: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
 }
 
 .cat-item p {
-    margin: 0;
     font-size: 11px;
+    text-align: center;
+    margin-top: 5px;
     font-weight: 500;
-}
-
-/* SMALL ADS */
-.small-ads-container {
-    display: flex;
-    gap: 12px;
-    overflow-x: auto;
-    padding-bottom: 10px;
-}
-
-.ad-mini {
-    min-width: 130px;
-    height: 70px;
-    border-radius: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    font-weight: bold;
-    box-shadow: var(--shadow);
-}
-
-/* PROVIDERS */
-.provider-scroll {
-    display: flex;
-    gap: 15px;
-    overflow-x: auto;
-    padding: 10px 0;
-}
-
-.provider-card {
-    width: 70px;
-    height: 70px;
-    background: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 2px solid var(--primary);
-    box-shadow: var(--shadow);
 }
