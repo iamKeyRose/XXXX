@@ -81,18 +81,19 @@ function startAllCarousels() {
     });
 }
 
-function handleAction(msg) {
+function handleAction(type, val) {
     tg.HapticFeedback.impactOccurred('light');
-    if (msg === 'Deposit') {
-        tg.showPopup({
-            title: 'Deposit',
-            message: 'Method:',
-            buttons: [{id:'tele', text:'Telebirr'}, {id:'cbe', text:'CBE'}, {id:'x', type:'destructive', text:'Back'}]
-        });
+
+    if (type === 'category') {
+        showCategoryItems(val);
+    } else if (val === 'Deposit') {
+        // Your deposit logic...
+        tg.showAlert("Deposit feature coming soon");
     } else {
-        tg.showAlert("Clicked: " + msg);
+        tg.showAlert("Action: " + val);
     }
 }
+
 
 function openPostMenu() {
     tg.HapticFeedback.impactOccurred('medium');
