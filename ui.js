@@ -19,6 +19,48 @@ function renderProvider(name, rating) {
     `;
 }
 
+/* --- ui.js --- */
+
+// 1. Define the 10 ads
+const adsData = [
+    {t:"Car Wash", d:"20% Off Today", c:"#2481cc"}, 
+    {t:"New Salon", d:"Opening Sale", c:"#f4a261"},
+    {t:"Repair", d:"Fast Fix", c:"#2a9d8f"}, 
+    {t:"Food", d:"Free Delivery", c:"#e63946"},
+    {t:"Cleaning", d:"Deep Clean", c:"#457b9d"}, 
+    {t:"Electric", d:"24/7 Service", c:"#ffb703"},
+    {t:"Plumbing", d:"Expert Care", c:"#219ebc"}, 
+    {t:"Laundry", d:"Express Wash", c:"#6d597a"},
+    {t:"Gardening", d:"Full Care", c:"#52b788"}, 
+    {t:"Moving", d:"Cheap Rates", c:"#355070"}
+];
+
+// 2. Function to shuffle the ads array
+function shuffleAds(array) {
+    return array.sort(() => Math.random() - 0.5);
+}
+
+function renderDashboard() {
+    const main = document.getElementById('main-content');
+    if (!main) return;
+
+    // Shuffle the ads before rendering
+    const shuffledSlides = shuffleAds([...adsData]);
+
+    main.innerHTML = `
+        <div class="carousel-container" id="ad-track">
+            ${shuffledSlides.map(s => `
+                <div class="ad-slide" style="background:${s.c}">
+                    <h2>${s.t}</h2>
+                    <p>${s.d}</p>
+                </div>
+            `).join('')}
+        </div>
+        
+        `;
+}
+
+
 function renderTopProvider(name, category, rating) {
     return `
         <div class="top-card" onclick="handleAction('Top Rated: ${name}')">
