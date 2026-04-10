@@ -292,4 +292,31 @@ async function openMyProfile() {
 }
 
 
+// Add this to app.js
+window.handleAction = function(action) {
+    tg.HapticFeedback.impactOccurred('light');
+
+    switch(action) {
+        case 'Home':
+            renderDashboard();
+            break;
+            
+        case 'Profile':
+            openMyProfile(); 
+            break;
+
+        case 'Search':
+            tg.showAlert("Search coming soon!");
+            break;
+
+        case 'Orders':
+            tg.showAlert("Order history coming soon!");
+            break;
+
+        default:
+            console.log("Unknown action:", action);
+    }
+};
+
+
 window.addEventListener('load', init);
