@@ -20,13 +20,13 @@ function shuffleAds(array) {
 
 function renderPaymentCard(amount) {
     return `
-        <div class="card-base" style="background: linear-gradient(135deg, #2ecc71, #27ae60); color: white; padding: 20px; border-radius: 18px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+        <div style="background: linear-gradient(135deg, #2ecc71, #27ae60); color: white; padding: 20px; border-radius: 18px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div>
                     <small style="opacity: 0.8; text-transform: uppercase; font-size: 10px;">Current Balance</small>
                     <h2 style="margin: 5px 0;">${amount} ETB</h2>
                 </div>
-                <button class="auth-btn" style="background: white; color: #27ae60; border: none; padding: 8px 15px; border-radius: 10px; font-weight: bold;">Deposit</button>
+                <button class="auth-btn" style="background: white; color: #27ae60; border: none; padding: 8px 15px; border-radius: 10px; font-weight: bold;" onclick="handleAction('Deposit')">Deposit</button>
             </div>
         </div>
     `;
@@ -53,8 +53,8 @@ function renderProvider(name, rating) {
 
 function renderInlineAd(title, desc, color) {
     return `
-        <div class="inline-ad" style="background: ${color}; color: white; border-radius: 15px; padding: 15px; margin: 25px 0; display: flex; align-items: center; gap: 15px; position: relative; overflow: hidden;" onclick="handleAction('Ad: ${title}')">
-            <span style="position: absolute; top: 0; right: 0; background: rgba(255,255,255,0.2); font-size: 8px; padding: 2px 6px; border-bottom-left-radius: 8px;">SPONSORED</span>
+        <div class="inline-ad" style="background: ${color};" onclick="handleAction('Ad: ${title}')">
+            <span class="ad-badge">SPONSORED</span>
             <div style="font-size: 24px;">🎁</div>
             <div>
                 <div style="font-weight: bold; font-size: 14px;">${title}</div>
@@ -83,11 +83,13 @@ function renderRoleSelection() {
     main.innerHTML = `
         <div style="padding: 20px; text-align: center;">
             <h2 style="margin-top: 40px;">Join Habesha Hub</h2>
-            <div class="card-base" onclick="setRole('guest')" style="padding:25px; cursor: pointer; margin-bottom: 15px; border: 1px solid #eee;">
-                🛍️ <strong>Register as Guest</strong>
+            <div class="auth-card" onclick="setRole('guest')" style="cursor: pointer; flex-direction: column; padding: 25px;">
+                <span style="font-size: 30px;">🛍️</span>
+                <strong>Register as Guest</strong>
             </div>
-            <div class="card-base" onclick="setRole('provider')" style="padding:25px; cursor: pointer; border: 1px solid #eee;">
-                🛠️ <strong>Register as Provider</strong>
+            <div class="auth-card" onclick="setRole('provider')" style="cursor: pointer; flex-direction: column; padding: 25px;">
+                <span style="font-size: 30px;">🛠️</span>
+                <strong>Register as Provider</strong>
             </div>
         </div>
     `;
@@ -105,7 +107,7 @@ function renderManualAddressForm() {
     `;
 }
 
-/* --- 4. MAIN RENDER (ALWAYS LAST) --- */
+/* --- 4. MAIN RENDER --- */
 
 function renderDashboard() {
     const main = document.getElementById('main-content');
@@ -115,31 +117,32 @@ function renderDashboard() {
     const user = window.Telegram.WebApp.initDataUnsafe?.user;
 
     const authSection = userSession.role ? `
-        <div>
-            <strong>${user?.first_name || 'User'} (${userSession.role})</strong>
-            <p style="margin:0; font-size:12px; color:var(--text-muted)">${userSession.type} verified</p>
+        <div style="width:100%; display:flex; justify-content:space-between; align-items:center;">
+            <div>
+                <strong>${user?.first_name || 'User'} (${userSession.role})</strong>
+                <p style="margin:0; font-size:12px; color:var(--text-muted)">${userSession.type} verified</p>
+            </div>
+            <div style="font-size: 24px;">✅</div>
         </div>
-        <div style="font-size: 24px;">✅</div>
     ` : `
-        <div>
-            <strong>Habesha Hub Membership</strong>
-            <p style="margin:0; font-size:12px; color:var(--text-muted)">Connect Account</p>
+        <div style="width:100%; display:flex; justify-content:space-between; align-items:center;">
+            <div>
+                <strong>Habesha Hub Membership</strong>
+                <p style="margin:0; font-size:12px; color:var(--text-muted)">Connect Account</p>
+            </div>
+            <button class="auth-btn" onclick="startRegistration()">Join</button>
         </div>
-        <button class="auth-btn" onclick="startRegistration()">Join</button>
     `;
 
     const cats = [
-        {i:'🛠️', l:'Repair'}, {i:'🧹', l:'Cleaning'}, 
-        {i:'🚚', l:'Delivery'}, {i:'💇', l:'Beauty'},
-        {i:'🚕', l:'Taxi'}, {i:'🍱', l:'Food'}, 
-        {i:'⚡', l:'Power'}, {i:'🧺', l:'Laundry'},
-        {i:'🎨', l:'Paint'}, {i:'🌿', l:'Plant'}, 
-        {i:'🏥', l:'Med'}, {i:'➕', l:'More'}
+        {i:'🛠️', l:'Repair'}, {i:'🧹', l:'Cleaning'}, {i:'🚚', l:'Delivery'}, {i:'💇', l:'Beauty'},
+        {i:'🚕', l:'Taxi'}, {i:'🍱', l:'Food'}, {i:'⚡', l:'Power'}, {i:'🧺', l:'Laundry'}
     ];
 
+    const tops = [{n: 'Abebe C.', c: 'Repair', r: '5.0'}, {n: 'Selam H.', c: 'Cleaning', r: '4.9'}];
+
     const pros = [
-        {n:'Abebe', r:'4.9'}, {n:'Selam', r:'5.0'}, {n:'Marta', r:'4.8'}, {n:'Kebede', r:'4.7'},
-        {n:'Desta', r:'4.9'}, {n:'Hanna', r:'5.0'}, {n:'Yonas', r:'4.6'}, {n:'Bekele', r:'4.8'}
+        {n:'Abebe', r:'4.9'}, {n:'Selam', r:'5.0'}, {n:'Marta', r:'4.8'}, {n:'Kebede', r:'4.7'}
     ];
 
     main.innerHTML = `
@@ -158,11 +161,15 @@ function renderDashboard() {
 
         ${renderInlineAd("Premium Cleaning", "Book today and get 15% off.", "linear-gradient(135deg, #667eea, #764ba2)")}
 
-        <section style="margin-bottom: 80px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                <h3 style="margin:0">All Providers</h3>
-                <span style="color:var(--primary); font-size:12px; font-weight:bold;">More</span>
+        <section style="margin-bottom: 25px;">
+            <h3 style="margin-bottom: 10px;">⭐ Top Rated</h3>
+            <div class="top-rated-scroll">
+                ${tops.map(t => renderTopProvider(t.n, t.c, t.r)).join('')}
             </div>
+        </section>
+
+        <section style="margin-bottom: 80px;">
+            <h3 style="margin-bottom: 5px;">All Providers</h3>
             <div class="grid-4">${pros.map(p => renderProvider(p.n, p.r)).join('')}</div>
         </section>
 
