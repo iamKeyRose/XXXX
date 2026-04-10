@@ -1,12 +1,21 @@
-// Initialize Telegram WebApp
+// Initialize Telegram
 const tg = window.Telegram.WebApp;
 
-document.addEventListener('DOMContentLoaded', () => {
+function init() {
     tg.ready();
     tg.expand();
-    
-    // Call the function from ui.js to build the page
-    renderDashboard();
-    
-    console.log("App Initialized for:", tg.initDataUnsafe?.user?.first_name);
-});
+
+    // Check if the renderDashboard function exists before calling it
+    if (typeof renderDashboard === "function") {
+        renderDashboard();
+    } else {
+        console.error("ui.js was not loaded correctly!");
+    }
+}
+
+// This is the safest way to trigger the UI in 2026
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+} else {
+    init();
+}
