@@ -45,10 +45,34 @@ function startAllCarousels() {
 }
 
 /* --- REGISTRATION FLOW --- */
-function startRegistration() {
-    carouselTimers.forEach(clearInterval);
-    renderRoleSelection();
+async function completeRegistration() {
+    const user = tg.initDataUnsafe?.user;
+
+    const userData = {
+        tg_id: user?.id || 0, // This is the PRIMARY KEY
+        first_name: user?.first_name || 'User',
+        role: userSession.role,
+        account_type: userSession.type,
+        city: userSession.location?.city,
+        area: userSession.location?.area,
+        balance: 0 // New users start at 0
+    };
+
+    try {
+        // .upsert() means: If ID exists, update it. If not, create it.
+        const { data, error } = await supabase
+            .from('users')
+            .upsert(userData);
+
+        if (error) throw error;
+
+        tg.showAlert("Data saved to Supabase!");
+        renderDashboard();
+    } catch (err) {
+        tg.showAlert("Error: " + err.message);
+    }
 }
+
 
 function setRole(role) {
     userSession.role = role;
