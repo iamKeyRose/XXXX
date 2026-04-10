@@ -96,10 +96,25 @@ function renderDashboard() {
         <div class="big-sq" style="cursor:pointer;">${renderAdSlider('talent-carousel', '100%')}</div>
 
         <nav>
-            <div onclick="handleAction('Home')" style="text-align:center; color:var(--primary); cursor:pointer;"><div style="font-size:20px">🏠</div><div style="font-size:10px">Home</div></div>
-            <div onclick="handleAction('Search')" style="text-align:center; color:#888; cursor:pointer;"><div style="font-size:20px">🔍</div><div style="font-size:10px">Search</div></div>
-            <div onclick="handleAction('Orders')" style="text-align:center; color:#888; cursor:pointer;"><div style="font-size:20px">📦</div><div style="font-size:10px">Orders</div></div>
-            <div onclick="handleAction('Profile')" style="text-align:center; color:#888; cursor:pointer;"><div style="font-size:20px">👤</div><div style="font-size:10px">Profile</div></div>
-        </nav>
+    <div onclick="handleAction('Home')" style="text-align:center; color:var(--primary); cursor:pointer;">
+        <div style="font-size:20px">🏠</div><div style="font-size:10px">Home</div>
+    </div>
+    <div onclick="handleAction('Search')" style="text-align:center; color:#888; cursor:pointer;">
+        <div style="font-size:20px">🔍</div><div style="font-size:10px">Search</div>
+    </div>
+    
+    <div onclick="openPostMenu()" style="text-align:center; margin-top:-30px;">
+        <div style="background:var(--primary); width:50px; height:50px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-size:30px; box-shadow:0 4px 10px rgba(36,129,204,0.4); border:4px solid white;">+</div>
+        <div style="font-size:10px; color:var(--primary); margin-top:5px; font-weight:bold;">Post</div>
+    </div>
+
+    <div onclick="handleAction('Orders')" style="text-align:center; color:#888; cursor:pointer;">
+        <div style="font-size:20px">📦</div><div style="font-size:10px">Orders</div>
+    </div>
+    <div onclick="handleAction('Profile')" style="text-align:center; color:#888; cursor:pointer;">
+        <div style="font-size:20px">👤</div><div style="font-size:10px">Profile</div>
+    </div>
+</nav>
+
     `;
 }
