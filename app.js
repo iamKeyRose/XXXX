@@ -94,4 +94,36 @@ function handleAction(msg) {
     }
 }
 
+function openPostMenu() {
+    tg.HapticFeedback.impactOccurred('medium');
+
+    let title, message, buttons;
+
+    if (userSession.role === 'provider') {
+        title = "Provider Menu";
+        message = "What would you like to list?";
+        buttons = [
+            {id: 'service', type: 'default', text: 'Post a Service'},
+            {id: 'job', type: 'default', text: 'Post a Job Opening'},
+            {id: 'cancel', type: 'destructive', text: 'Cancel'}
+        ];
+    } else {
+        title = "Client Menu";
+        message = "What are you looking for?";
+        buttons = [
+            {id: 'talent', type: 'default', text: 'Post Talent Request'},
+            {id: 'request', type: 'default', text: 'Post Service Request'},
+            {id: 'cancel', type: 'destructive', text: 'Cancel'}
+        ];
+    }
+
+    tg.showPopup({ title, message, buttons }, (buttonId) => {
+        if (buttonId !== 'cancel') {
+            // This will lead to the form where they type the details
+            renderPostForm(buttonId); 
+        }
+    });
+}
+
+
 window.addEventListener('load', init);
