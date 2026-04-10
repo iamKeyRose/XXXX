@@ -19,6 +19,66 @@ function renderProvider(name, rating) {
     `;
 }
 
+// Screen A: Role Selection
+function renderRoleSelection() {
+    const main = document.getElementById('main-content');
+    main.innerHTML = `
+        <div style="padding: 20px; text-align: center; animation: fadeIn 0.3s;">
+            <h2 style="margin-top: 40px;">Join Habesha Hub</h2>
+            <p style="color: var(--text-muted); margin-bottom: 30px;">Choose your primary goal</p>
+            
+            <div class="card-base" onclick="setRole('guest')" style="padding:25px; cursor: pointer; margin-bottom: 15px; border: 1px solid #eee;">
+                <div style="font-size: 40px; margin-bottom: 10px;">🛍️</div>
+                <strong>Register as Guest</strong>
+                <p style="font-size: 11px; color: var(--text-muted);">I am looking for services/talent.</p>
+            </div>
+
+            <div class="card-base" onclick="setRole('provider')" style="padding:25px; cursor: pointer; border: 1px solid #eee;">
+                <div style="font-size: 40px; margin-bottom: 10px;">🛠️</div>
+                <strong>Register as Provider</strong>
+                <p style="font-size: 11px; color: var(--text-muted);">I want to sell my services/talent.</p>
+            </div>
+        </div>
+    `;
+}
+
+// Screen B: Manual Address Form
+function renderManualAddressForm() {
+    const main = document.getElementById('main-content');
+    main.innerHTML = `
+        <div style="padding: 20px; animation: fadeIn 0.3s;">
+            <h3>📍 Set Address</h3>
+            <p style="font-size: 12px; color: var(--text-muted);">Ensure your address is accurate for local orders.</p>
+            
+            <div style="margin-top: 20px;">
+                <label style="font-size: 11px; font-weight: bold; color:var(--primary)">City</label>
+                <input type="text" id="city" placeholder="e.g. Addis Ababa or Dubai" 
+                       style="width: 100%; padding: 12px; margin: 8px 0 15px 0; border: 1px solid #ddd; border-radius: 10px;">
+                
+                <label style="font-size: 11px; font-weight: bold; color:var(--primary)">Area / Neighborhood</label>
+                <input type="text" id="area" placeholder="e.g. Bole or Al Barsha" 
+                       style="width: 100%; padding: 12px; margin: 8px 0 25px 0; border: 1px solid #ddd; border-radius: 10px;">
+                
+                <button class="auth-btn" style="width: 100%;" onclick="saveManualAddress()">Finish</button>
+            </div>
+        </div>
+    `;
+}
+
+function saveManualAddress() {
+    const city = document.getElementById('city').value;
+    const area = document.getElementById('area').value;
+    
+    if(!city || !area) {
+        window.Telegram.WebApp.showAlert("Please fill in both City and Area.");
+        return;
+    }
+    
+    userSession.location = { city, area };
+    completeRegistration();
+}
+
+
 function renderTopProvider(name, category, rating) {
     return `
         <div class="top-card" onclick="handleAction('Top Rated: ${name}')">
