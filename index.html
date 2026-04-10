@@ -3,58 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <title>Habesha Super App</title>
-
+    <title>Habesha Hub</title>
+    
+    <link rel="stylesheet" href="style.css">
+    
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-
-    <style>
-        :root { --tg-viewport-height: 100dvh; }
-        html, body {
-            margin: 0; padding: 0; width: 100vw; height: 100dvh; 
-            overflow: hidden; background-color: var(--tg-theme-bg-color, #ffffff);
-            color: var(--tg-theme-text-color, #222222);
-            display: flex; flex-direction: column; font-family: sans-serif;
-        }
-        #app-container {
-            flex: 1; width: 100%; display: flex; flex-direction: column;
-            padding-top: var(--tg-safe-area-inset-top, 0px);
-            padding-bottom: var(--tg-safe-area-inset-bottom, 0px);
-        }
-        header { padding: 15px; text-align: center; background: var(--tg-theme-secondary-bg-color, #f0f0f0); }
-        footer { padding: 10px; text-align: center; }
-        .service-button { padding: 10px 20px; background: #2481cc; color: white; border: none; border-radius: 8px; cursor: pointer; }
-    </style>
 </head>
 <body>
-
     <div id="app-container">
-        <header><strong>Habesha Hub</strong></header>
-        <main id="content" style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-            <p>App is Loading...</p>
-        </main>
-        <footer><small>Powered by Telegram</small></footer>
+        <header id="main-header">
+            <strong>Habesha Hub</strong>
+        </header>
+
+        <main id="main-content"></main>
+
+        <footer id="main-footer">
+            <small>© 2026 Habesha Hub</small>
+        </footer>
     </div>
 
-    <script>
-        // We use an event listener to ensure the HTML is drawn before the script runs
-        window.addEventListener('DOMContentLoaded', () => {
-            const tg = window.Telegram.WebApp;
-
-            // Signal to Telegram that we are ready
-            tg.ready();
-            tg.expand();
-
-            // Update the UI
-            const firstName = tg.initDataUnsafe?.user?.first_name || 'Valued Guest';
-            
-            document.getElementById('content').innerHTML = `
-                <h2>Welcome, ${firstName}!</h2>
-                <p>The app is now live and connected.</p>
-                <button class="service-button" onclick="window.Telegram.WebApp.close()">Close App</button>
-            `;
-        });
-    </script>
+    <script src="ui.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
