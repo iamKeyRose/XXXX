@@ -1,41 +1,48 @@
+// Reusable Component: Category
 function renderCategory(icon, label) {
     return `
-        <div class="cat-item" onclick="handleCategoryClick('${label}')">
-            <div class="icon-circle">${icon}</div>
-            <p>${label}</p>
+        <div class="item-vertical" onclick="handleAction('Category: ${label}')">
+            <div class="icon-box">${icon}</div>
+            <p style="margin:0; font-size:11px; font-weight:500;">${label}</p>
         </div>
     `;
 }
 
+// Reusable Component: Provider
 function renderProvider(name, rating) {
     return `
-        <div class="provider-item">
+        <div class="item-vertical" onclick="handleAction('Provider: ${name}')" style="background:white; padding:10px; border-radius:15px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
             <div class="provider-logo">👤</div>
-            <div style="font-size: 12px; font-weight: bold; margin-bottom: 4px;">${name}</div>
-            <div style="font-size: 11px; color: #f39c12;">⭐ ${rating}</div>
+            <div style="font-size: 11px; font-weight: bold; white-space: nowrap; overflow: hidden; width: 100%;">${name}</div>
+            <div style="font-size: 10px; color: #f39c12;">⭐ ${rating}</div>
         </div>
     `;
 }
 
-function handleCategoryClick(category) {
+function handleAction(msg) {
     const tg = window.Telegram.WebApp;
     tg.HapticFeedback.impactOccurred('light');
-    tg.showAlert('Selected: ' + category);
+    tg.showAlert(msg);
 }
 
 function renderDashboard() {
     const main = document.getElementById('main-content');
     if (!main) return;
 
-    const categories = [
+    const cats = [
         {i:'🛠️', l:'Repair'}, {i:'🧹', l:'Cleaning'}, {i:'🚚', l:'Delivery'}, {i:'💇', l:'Beauty'},
         {i:'🚕', l:'Taxi'}, {i:'🍱', l:'Food'}, {i:'⚡', l:'Electric'}, {i:'🧺', l:'Laundry'},
         {i:'👨‍🎨', l:'Painting'}, {i:'🌿', l:'Garden'}, {i:'🏥', l:'Health'}, {i:'➕', l:'More'}
     ];
 
+    const pros = [
+        {n:'Abebe', r:'4.9'}, {n:'Selam', r:'5.0'}, {n:'Marta', r:'4.8'}, {n:'Kebede', r:'4.7'},
+        {n:'Desta', r:'4.9'}, {n:'Hanna', r:'5.0'}, {n:'Yonas', r:'4.6'}, {n:'Bekele', r:'4.8'}
+    ];
+
     main.innerHTML = `
         <div class="carousel-container">
-            <div class="ad-slide" style="background: linear-gradient(135deg, #2481cc, #1a5f96);">
+            <div class="ad-slide" style="background: linear-gradient(135deg, var(--primary), var(--primary-dark));">
                 <h2 style="margin:0">Car Wash</h2><p>20% Off Today</p>
             </div>
             <div class="ad-slide" style="background: linear-gradient(135deg, #f4a261, #e76f51);">
@@ -43,18 +50,15 @@ function renderDashboard() {
             </div>
         </div>
 
-        <div class="auth-card">
-            <div><strong>Habesha Hub</strong><br><small style="color:#888">Login to save address</small></div>
+        <div class="card-base auth-card">
+            <div><strong>Habesha Hub</strong><br><small style="color:var(--text-muted)">Login for more</small></div>
             <button class="auth-btn">Join</button>
         </div>
 
-        <section>
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                <h3 style="margin:0">Our Services</h3>
-                <span style="color:var(--primary); font-size:12px; font-weight:bold;">View All</span>
-            </div>
-            <div class="category-grid">
-                ${categories.map(c => renderCategory(c.i, c.l)).join('')}
+        <section style="margin-bottom:25px;">
+            <h3>Our Services</h3>
+            <div class="grid-4">
+                ${cats.map(c => renderCategory(c.i, c.l)).join('')}
             </div>
         </section>
 
@@ -65,13 +69,9 @@ function renderDashboard() {
         </div>
 
         <section>
-            <h3 style="margin: 0 0 10px 0">Top Providers</h3>
-            <div class="provider-scroll">
-                ${renderProvider('Abebe', '4.9')}
-                ${renderProvider('Selam', '5.0')}
-                ${renderProvider('Marta', '4.8')}
-                ${renderProvider('Kebede', '4.7')}
-                ${renderProvider('Desta', '4.9')}
+            <h3>Featured Providers</h3>
+            <div class="grid-4">
+                ${pros.map(p => renderProvider(p.n, p.r)).join('')}
             </div>
         </section>
     `;
