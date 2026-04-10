@@ -79,11 +79,10 @@ async function showCategoryItems(categoryName) {
     const main = document.getElementById('main-content');
     main.innerHTML = `<div style="padding:20px; text-align:center;">Searching for ${categoryName}...</div>`;
 
-    // Fetch only items matching this category
     const { data, error } = await dbClient
         .from('listings')
         .select('*')
-        .eq('type', categoryName.toLowerCase()) // Match the category name
+        .eq('type', categoryName) // Match case with your DB (e.g., 'Repair')
         .eq('status', 'active');
 
     if (error) {
@@ -97,13 +96,14 @@ async function showCategoryItems(categoryName) {
             <h2 style="margin:0">${categoryName}</h2>
         </div>`;
 
-    if (data.length === 0) {
+    if (!data || data.length === 0) {
         listHtml += `<div style="text-align:center; padding:40px; color:#888;">No ${categoryName} listed yet.</div>`;
     } else {
         listHtml += `<div class="grid-2">`;
         data.forEach(item => {
+            // FIX: Changed from tg.showAlert to viewListingDetail
             listHtml += `
-                <div class="card" onclick="tg.showAlert('${item.description}')">
+                <div class="card" onclick="viewListingDetail('${item.id}')" style="cursor:pointer;">
                     <div style="font-size:30px">📦</div>
                     <div style="font-weight:bold; margin-top:5px;">${item.title}</div>
                     <div style="color:var(--primary); font-size:12px;">${item.price} ETB</div>
