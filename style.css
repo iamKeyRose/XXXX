@@ -1,78 +1,136 @@
-/* Carousel Logic */
+:root {
+    --primary: #2481cc;
+    --bg: #ffffff;
+    --secondary-bg: #f5f7fa;
+    --text: #1a1a1a;
+    --shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, system-ui, sans-serif;
+    background-color: var(--secondary-bg);
+    color: var(--text);
+}
+
+#main-content {
+    padding: 16px;
+    overflow-y: auto;
+}
+
+/* CAROUSEL */
 .carousel-container {
     width: 100%;
     height: 160px;
     overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    border-radius: 20px;
-    margin-bottom: 20px;
-}
-
-.carousel-track {
     display: flex;
-    width: 300%; /* 3 slides */
-    height: 100%;
+    scroll-snap-type: x mandatory;
+    border-radius: 18px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
 }
 
 .ad-slide {
-    flex: 0 0 100vw; /* Each slide is full width */
+    min-width: 100%;
     scroll-snap-align: start;
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
-}
-
-/* Auth Card */
-.auth-card {
-    background: white;
-    padding: 15px;
-    border-radius: 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-    margin-bottom: 20px;
-}
-
-.auth-btn {
-    background: #2481cc;
-    color: white;
-    border: none;
-    padding: 8px 15px;
-    border-radius: 10px;
     font-weight: bold;
 }
 
-/* Small Ads */
+/* AUTH CARD */
+.auth-card {
+    background: white;
+    padding: 20px;
+    border-radius: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    box-shadow: var(--shadow);
+}
+
+.auth-btn {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-weight: 600;
+}
+
+/* CATEGORY GRID */
+.category-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 25px;
+}
+
+.cat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.icon-circle {
+    width: 60px;
+    height: 60px;
+    background: white;
+    border-radius: 18px; /* Squircle */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    box-shadow: var(--shadow);
+    margin-bottom: 8px;
+}
+
+.cat-item p {
+    margin: 0;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+/* SMALL ADS */
 .small-ads-container {
     display: flex;
-    gap: 10px;
+    gap: 12px;
     overflow-x: auto;
-    padding: 10px 0;
+    padding-bottom: 10px;
 }
 
 .ad-mini {
-    min-width: 120px;
-    height: 60px;
-    background: #fff9c4;
-    border-radius: 12px;
+    min-width: 130px;
+    height: 70px;
+    border-radius: 15px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 12px;
-    flex-shrink: 0;
-}
-
-/* Provider UI */
-.provider-item {
-    text-align: center;
-    min-width: 80px;
-}
-
-.rating {
-    font-size: 10px;
     font-weight: bold;
-    display: block;
-    margin-top: 5px;
+    box-shadow: var(--shadow);
+}
+
+/* PROVIDERS */
+.provider-scroll {
+    display: flex;
+    gap: 15px;
+    overflow-x: auto;
+    padding: 10px 0;
+}
+
+.provider-card {
+    width: 70px;
+    height: 70px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--primary);
+    box-shadow: var(--shadow);
 }
