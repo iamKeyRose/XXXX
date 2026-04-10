@@ -319,4 +319,40 @@ window.handleAction = function(action) {
 };
 
 
+window.saveProfileUpdates = async function() {
+    const userId = tg.initDataUnsafe?.user?.id;
+    
+    // 1. Collect data from the UI inputs
+    const updatedData = {
+        first_name: document.getElementById('edit-name').value,
+        bio: document.getElementById('edit-bio').value,
+        phone: document.getElementById('edit-phone').value
+    };
+
+    // 2. Visual feedback for the user
+    tg.MainButton.setText("Saving...");
+    tg.MainButton.showProgress();
+    tg.MainButton.show();
+
+    // 3. Update the database
+    const { error } = await dbClient
+        .from('users')
+        .update(updatedData)
+        .eq('tg_id', userId);
+
+    if (error) {
+        tg.showAlert("Update failed: " + error.message);
+    } else {
+        tg.HapticFeedback.notificationOccurred('success');
+        tg.showAlert("Profile updated successfully!");
+        
+        // 4. Critical: Refresh the session data so the "View" mode has the new info
+        openMyProfile(); 
+    }
+    
+    tg.MainButton.hide();
+    tg.MainButton.hideProgress();
+};
+
+
 window.addEventListener('load', init);
