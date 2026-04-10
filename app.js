@@ -17,7 +17,7 @@ function startCarousel() {
 
     setInterval(() => {
         const width = track.offsetWidth;
-        if (track.scrollLeft >= (track.scrollWidth - width - 10)) {
+        if (track.scrollLeft + width >= track.scrollWidth - 5) {
             track.scrollTo({ left: 0, behavior: 'smooth' });
         } else {
             track.scrollBy({ left: width, behavior: 'smooth' });
