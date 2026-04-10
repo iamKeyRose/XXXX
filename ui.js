@@ -181,6 +181,72 @@ function renderProfileDetail(item) {
 }
 
 
+
+function renderProfileView(profile, isEditing = false) {
+    const main = document.getElementById('main-content');
+    
+    let content = '';
+
+    if (isEditing) {
+        // --- EDIT MODE ---
+        content = `
+            <div class="card" style="padding:20px; text-align:left;">
+                <label style="font-size:12px; color:#888;">Full Name</label>
+                <input type="text" id="edit-name" value="${profile.first_name || ''}" style="width:100%; padding:10px; margin-bottom:15px; border:1px solid #ddd; border-radius:8px;">
+                
+                <label style="font-size:12px; color:#888;">Bio / Skills</label>
+                <textarea id="edit-bio" style="width:100%; padding:10px; margin-bottom:15px; border:1px solid #ddd; border-radius:8px;">${profile.bio || ''}</textarea>
+                
+                <label style="font-size:12px; color:#888;">Phone (WhatsApp)</label>
+                <input type="tel" id="edit-phone" value="${profile.phone || ''}" style="width:100%; padding:10px; margin-bottom:15px; border:1px solid #ddd; border-radius:8px;">
+                
+                <div style="display:flex; gap:10px;">
+                    <button class="auth-btn" style="flex:1" onclick="saveProfileUpdates()">Save Changes</button>
+                    <button class="auth-btn" style="flex:1; background:#888;" onclick="openMyProfile()">Cancel</button>
+                </div>
+            </div>
+        `;
+    } else {
+        // --- VIEW MODE ---
+        content = `
+            <div class="card" style="text-align:center; padding:20px;">
+                <div style="font-size:50px;">👤</div>
+                <h2 style="margin:10px 0;">${profile.first_name}</h2>
+                <p style="color:#888;">${profile.role.toUpperCase()} • ${profile.city}</p>
+                <button onclick="renderProfileView(JSON.parse('${JSON.stringify(profile).replace(/'/g, "\\'")}'), true)" style="background:none; border:1px solid var(--primary); color:var(--primary); padding:5px 15px; border-radius:15px; font-size:12px;">Edit Profile</button>
+            </div>
+
+            <div class="grid-2" style="margin-top:20px;">
+                <div class="card">
+                    <small>Rating</small>
+                    <div style="font-weight:bold;">⭐ ${profile.rating}</div>
+                </div>
+                <div class="card">
+                    <small>Revenue</small>
+                    <div style="font-weight:bold; color:#2ecc71;">${profile.total_revenue} ETB</div>
+                </div>
+            </div>
+
+            <div class="card" style="margin-top:20px; text-align:left; padding:15px;">
+                <h4 style="margin-top:0;">Professional Bio</h4>
+                <p style="font-size:14px; color:#555;">${profile.bio || 'No bio added yet. Click edit to tell people what you do!'}</p>
+            </div>
+
+            <button onclick="handleLogout()" style="width:100%; margin-top:30px; background:none; border:none; color:#ff4d4d; font-size:14px;">Log Out</button>
+        `;
+    }
+
+    main.innerHTML = `
+        <div style="padding:15px; padding-bottom:80px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <h2 style="margin:0;">My Profile</h2>
+                <span style="background:var(--primary); color:white; padding:2px 8px; border-radius:10px; font-size:10px;">${profile.account_type}</span>
+            </div>
+            ${content}
+        </div>
+    `;
+}
+
 /* --- MAIN DASHBOARD --- */
 function renderDashboard() {
     const main = document.getElementById('main-content');
