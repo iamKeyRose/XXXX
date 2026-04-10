@@ -1,32 +1,30 @@
 const tg = window.Telegram.WebApp;
 
-// Global State
+// Global State - MUST stay at top
 let userSession = {
     role: null,
     type: null,
     location: null
 };
 
-let carouselInterval; // Move this to the top with other globals
+let carouselInterval; 
 
-// Corrected Init: Combined both into one single function
+// Combined Init Function
 function init() {
     tg.ready();
     tg.expand();
     tg.setHeaderColor('#ffffff');
-    
-    // Initial Render
+
+    // 1. Render Dashboard
     renderDashboard();
-    
-    // Start the timer after the dashboard is rendered
+
+    // 2. Start Carousel
     startCarouselTimer();
 }
 
 /* --- CAROUSEL LOGIC --- */
 function startCarouselTimer() {
     const track = document.getElementById('ad-track');
-    // If we are on a registration screen, the track won't exist. 
-    // This check prevents errors.
     if (!track) return;
 
     if (carouselInterval) clearInterval(carouselInterval);
@@ -45,9 +43,9 @@ function startCarouselTimer() {
 }
 
 /* --- REGISTRATION FLOW --- */
+
 function startRegistration() {
-    // Stop the timer when moving to registration screens 
-    // so it doesn't try to scroll something that isn't there
+    // Stop carousel when we leave the dashboard
     if (carouselInterval) clearInterval(carouselInterval);
     renderRoleSelection();
 }
@@ -110,13 +108,20 @@ function saveManualAddress() {
     completeRegistration();
 }
 
+/* --- THE RETURN LOGIC --- */
+
 function completeRegistration() {
+    // 1. Confirm to user
     tg.showAlert("Welcome to Habesha Hub!");
+
+    // 2. IMPORTANT: Re-render the dashboard now that userSession is filled
     renderDashboard();
-    
-    // IMPORTANT: Restart the timer here because renderDashboard 
-    // creates a brand new 'ad-track' element.
+
+    // 3. IMPORTANT: Re-start the timer for the new dashboard ads
     startCarouselTimer();
+    
+    // 4. Scroll to top to show the ads and the new "Verified" badge
+    window.scrollTo(0, 0);
 }
 
 function handleAction(msg) {
@@ -124,5 +129,5 @@ function handleAction(msg) {
     tg.showAlert('Selected: ' + msg);
 }
 
-// Single event listener for the single init function
+// Single event listener
 window.addEventListener('load', init);
