@@ -10,4 +10,5 @@ function init() {
     }
 }
 
+// Load init once everything is ready
 window.addEventListener('load', init);
