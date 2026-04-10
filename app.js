@@ -86,4 +86,44 @@ function handleAction(msg) {
     tg.showAlert('Selected: ' + msg);
 }
 
+/* --- app.js --- */
+
+let carouselInterval;
+
+function startCarouselTimer() {
+    const track = document.getElementById('ad-track');
+    if (!track) return;
+
+    // Clear any existing timer to prevent double-speeding
+    if (carouselInterval) clearInterval(carouselInterval);
+
+    carouselInterval = setInterval(() => {
+        const slideWidth = track.offsetWidth;
+        const totalWidth = track.scrollWidth;
+        const currentScroll = track.scrollLeft;
+
+        // Logic: If at the last slide, jump back to the start
+        // We use a 5px buffer to account for sub-pixel rounding
+        if (currentScroll + slideWidth >= totalWidth - 5) {
+            track.scrollTo({
+                left: 0,
+                behavior: 'smooth' 
+            });
+        } else {
+            track.scrollBy({
+                left: slideWidth,
+                behavior: 'smooth'
+            });
+        }
+    }, 3000); // 3 seconds per slide
+}
+
+// Call this inside your init() or after renderDashboard()
+function init() {
+    tg.ready();
+    renderDashboard();
+    startCarouselTimer();
+}
+
+
 window.addEventListener('load', init);
