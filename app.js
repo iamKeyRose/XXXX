@@ -1,133 +1,75 @@
 const tg = window.Telegram.WebApp;
 
-// Global State - MUST stay at top
-let userSession = {
-    role: null,
-    type: null,
-    location: null
-};
+let userSession = { role: null, type: null, location: null };
+let carouselTimers = [];
 
-let carouselInterval; 
-
-// Combined Init Function
 function init() {
     tg.ready();
     tg.expand();
     tg.setHeaderColor('#ffffff');
-
-    // 1. Render Dashboard
     renderDashboard();
-
-    // 2. Start Carousel
-    startCarouselTimer();
+    startAllCarousels();
 }
 
-/* --- CAROUSEL LOGIC --- */
-function startCarouselTimer() {
-    const track = document.getElementById('ad-track');
-    if (!track) return;
+function startAllCarousels() {
+    // Clear existing timers to prevent duplicates
+    carouselTimers.forEach(clearInterval);
+    carouselTimers = [];
 
-    if (carouselInterval) clearInterval(carouselInterval);
+    const carouselIds = ['ad-main-top', 'talent-carousel', 'bottom-c1', 'bottom-c2', 'footer-track'];
+    
+    carouselIds.forEach(id => {
+        const track = document.getElementById(id);
+        if (!track) return;
 
-    carouselInterval = setInterval(() => {
-        const slideWidth = track.offsetWidth;
-        const totalWidth = track.scrollWidth;
-        const currentScroll = track.scrollLeft;
-
-        if (currentScroll + slideWidth >= totalWidth - 5) {
-            track.scrollTo({ left: 0, behavior: 'smooth' });
-        } else {
-            track.scrollBy({ left: slideWidth, behavior: 'smooth' });
-        }
-    }, 3000); 
+        const timer = setInterval(() => {
+            const width = track.offsetWidth;
+            if (track.scrollLeft + width >= track.scrollWidth - 5) {
+                track.scrollTo({ left: 0, behavior: 'smooth' });
+            } else {
+                track.scrollBy({ left: width, behavior: 'smooth' });
+            }
+        }, 3000);
+        carouselTimers.push(timer);
+    });
 }
-
-/* --- REGISTRATION FLOW --- */
 
 function startRegistration() {
-    // Stop carousel when we leave the dashboard
-    if (carouselInterval) clearInterval(carouselInterval);
+    carouselTimers.forEach(clearInterval);
     renderRoleSelection();
 }
 
 function setRole(role) {
     userSession.role = role;
     tg.HapticFeedback.impactOccurred('medium');
-
-    const options = role === 'guest' 
-        ? ['Individual Buyer', 'Company Buyer'] 
-        : ['Professional', 'Company/Agency'];
-
     tg.showPopup({
         title: 'Account Type',
-        message: `Are you an individual or a business?`,
-        buttons: [
-            {id: 'ind', type: 'default', text: options[0]},
-            {id: 'com', type: 'default', text: options[1]}
-        ]
-    }, (buttonId) => {
-        userSession.type = (buttonId === 'ind') ? 'individual' : 'company';
-        askForLocation();
-    });
-}
-
-function askForLocation() {
-    tg.showPopup({
-        title: 'Location',
-        message: 'How should we set your service area?',
-        buttons: [
-            {id: 'gps', type: 'default', text: '📍 GPS'},
-            {id: 'manual', type: 'default', text: '✍️ Manual'}
-        ]
-    }, (buttonId) => {
-        if (buttonId === 'gps') handleGPSLocation();
-        else renderManualAddressForm();
-    });
-}
-
-function handleGPSLocation() {
-    tg.getLocation((data) => {
-        if (data) {
-            userSession.location = { lat: data.latitude, lon: data.longitude };
-            completeRegistration();
-        } else {
-            tg.showAlert("GPS failed. Enter manually.");
-            renderManualAddressForm();
-        }
+        message: 'Are you an individual or a business?',
+        buttons: [{id: 'ind', text: 'Individual'}, {id: 'com', text: 'Business'}]
+    }, (btn) => {
+        userSession.type = btn === 'ind' ? 'individual' : 'company';
+        renderManualAddressForm();
     });
 }
 
 function saveManualAddress() {
     const city = document.getElementById('city').value;
     const area = document.getElementById('area').value;
-    if(!city || !area) {
-        tg.showAlert("Fill all fields.");
-        return;
-    }
+    if(!city || !area) return tg.showAlert("Fill all fields");
     userSession.location = { city, area };
     completeRegistration();
 }
 
-/* --- THE RETURN LOGIC --- */
-
 function completeRegistration() {
-    // 1. Confirm to user
-    tg.showAlert("Welcome to Habesha Hub!");
-
-    // 2. IMPORTANT: Re-render the dashboard now that userSession is filled
+    tg.showAlert("Registration Complete!");
     renderDashboard();
-
-    // 3. IMPORTANT: Re-start the timer for the new dashboard ads
-    startCarouselTimer();
-    
-    // 4. Scroll to top to show the ads and the new "Verified" badge
+    startAllCarousels();
     window.scrollTo(0, 0);
 }
 
 function handleAction(msg) {
     tg.HapticFeedback.impactOccurred('light');
-    tg.showAlert('Selected: ' + msg);
+    tg.showAlert(msg);
 }
 
-// Single event listener
 window.addEventListener('load', init);
