@@ -1,20 +1,18 @@
-// Reusable Component: Category
 function renderCategory(icon, label) {
     return `
-        <div class="item-vertical" onclick="handleAction('Category: ${label}')">
-            <div class="icon-box">${icon}</div>
+        <div class="item-box" onclick="handleAction('${label}')">
+            <div class="icon-sq">${icon}</div>
             <p style="margin:0; font-size:11px; font-weight:500;">${label}</p>
         </div>
     `;
 }
 
-// Reusable Component: Provider
 function renderProvider(name, rating) {
     return `
-        <div class="item-vertical" onclick="handleAction('Provider: ${name}')" style="background:white; padding:10px; border-radius:15px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
-            <div class="provider-logo">👤</div>
-            <div style="font-size: 11px; font-weight: bold; white-space: nowrap; overflow: hidden; width: 100%;">${name}</div>
-            <div style="font-size: 10px; color: #f39c12;">⭐ ${rating}</div>
+        <div class="item-box provider-card" onclick="handleAction('${name}')">
+            <div class="provider-img">👤</div>
+            <div style="font-size: 11px; font-weight: bold; white-space: nowrap; overflow: hidden; width: 90%;">${name}</div>
+            <div style="font-size: 10px; color: #f39c12; margin-top:2px;">⭐ ${rating}</div>
         </div>
     `;
 }
@@ -22,12 +20,19 @@ function renderProvider(name, rating) {
 function handleAction(msg) {
     const tg = window.Telegram.WebApp;
     tg.HapticFeedback.impactOccurred('light');
-    tg.showAlert(msg);
+    tg.showAlert('You selected: ' + msg);
 }
 
 function renderDashboard() {
     const main = document.getElementById('main-content');
-    if (!main) return;
+    
+    const slides = [
+        {t:"Car Wash", d:"20% Off Today", c:"#2481cc"}, {t:"New Salon", d:"Opening Sale", c:"#f4a261"},
+        {t:"Repair", d:"Fast Fix", c:"#2a9d8f"}, {t:"Food", d:"Free Delivery", c:"#e63946"},
+        {t:"Cleaning", d:"Deep Clean", c:"#457b9d"}, {t:"Electric", d:"24/7 Service", c:"#ffb703"},
+        {t:"Plumbing", d:"Expert Care", c:"#219ebc"}, {t:"Laundry", d:"Express Wash", c:"#6d597a"},
+        {t:"Gardening", d:"Full Care", c:"#52b788"}, {t:"Moving", d:"Cheap Rates", c:"#355070"}
+    ];
 
     const cats = [
         {i:'🛠️', l:'Repair'}, {i:'🧹', l:'Cleaning'}, {i:'🚚', l:'Delivery'}, {i:'💇', l:'Beauty'},
@@ -42,24 +47,19 @@ function renderDashboard() {
 
     main.innerHTML = `
         <div class="carousel-container">
-            <div class="ad-slide" style="background: linear-gradient(135deg, var(--primary), var(--primary-dark));">
-                <h2 style="margin:0">Car Wash</h2><p>20% Off Today</p>
-            </div>
-            <div class="ad-slide" style="background: linear-gradient(135deg, #f4a261, #e76f51);">
-                <h2 style="margin:0">New Salon</h2><p>Special Opening Rate</p>
-            </div>
+            ${slides.map(s => `<div class="ad-slide" style="background:${s.c}"><h2>${s.t}</h2><p>${s.d}</p></div>`).join('')}
         </div>
 
-        <div class="card-base auth-card">
-            <div><strong>Habesha Hub</strong><br><small style="color:var(--text-muted)">Login for more</small></div>
+        <div class="auth-card">
+            <div><strong>Habesha Hub Membership</strong><p style="margin:4px 0 0 0; font-size:12px; color:var(--text-muted)">Login to track orders</p></div>
             <button class="auth-btn">Join</button>
         </div>
 
         <section style="margin-bottom:25px;">
-            <h3>Our Services</h3>
-            <div class="grid-4">
-                ${cats.map(c => renderCategory(c.i, c.l)).join('')}
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px">
+                <h3 style="margin:0">Services</h3><span style="color:var(--primary); font-size:12px; font-weight:bold">View All</span>
             </div>
+            <div class="grid-4">${cats.map(c => renderCategory(c.i, c.l)).join('')}</div>
         </section>
 
         <div class="promo-row">
@@ -69,10 +69,8 @@ function renderDashboard() {
         </div>
 
         <section>
-            <h3>Featured Providers</h3>
-            <div class="grid-4">
-                ${pros.map(p => renderProvider(p.n, p.r)).join('')}
-            </div>
+            <h3 style="margin-bottom:10px">Featured Providers</h3>
+            <div class="grid-4">${pros.map(p => renderProvider(p.n, p.r)).join('')}</div>
         </section>
     `;
 }
