@@ -38,6 +38,65 @@ function renderPaymentCard(amount) {
     `;
 }
 
+/* ui.js - Add this new helper */
+
+function renderTopProvider(name, category, rating) {
+    return `
+        <div class="top-card" onclick="handleAction('Top Rated: ${name}')">
+            <span class="badge-gold">TOP RATED</span>
+            <div class="provider-img" style="border-color: #ffdf00;">👤</div>
+            <div style="font-size: 13px; font-weight: bold;">${name}</div>
+            <div style="font-size: 10px; color: var(--text-muted); margin-bottom: 5px;">${category}</div>
+            <div style="font-size: 11px; color: #f39c12; font-weight: bold;">★ ${rating}</div>
+        </div>
+    `;
+}
+
+/* Inside renderDashboard(), place this section above the regular Providers grid */
+
+function renderDashboard() {
+    const main = document.getElementById('main-content');
+    // ... existing data (slides, cats, pros) ...
+
+    // Top Rated Data
+    const tops = [
+        {n: 'Abebe C.', c: 'Repair', r: '5.0'},
+        {n: 'Selam H.', c: 'Cleaning', r: '4.9'},
+        {n: 'Marta L.', c: 'Beauty', r: '5.0'}
+    ];
+
+    main.innerHTML = `
+        <div class="carousel-container">${slides.map(s => `<div class="ad-slide" style="background:${s.c}"><h2>${s.t}</h2><p>${s.d}</p></div>`).join('')}</div>
+        ${renderPaymentCard('0.00')}
+
+        <section style="margin-bottom: 25px;">
+            <h3 style="margin-bottom: 10px;">⭐ Top Rated</h3>
+            <div class="top-rated-scroll">
+                ${tops.map(t => renderTopProvider(t.n, t.c, t.r)).join('')}
+            </div>
+        </section>
+
+        <section style="margin-bottom:25px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px">
+                <h3 style="margin:0">Services</h3><span style="color:var(--primary); font-size:12px; font-weight:bold">View All</span>
+            </div>
+            <div class="grid-4">${cats.map(c => renderCategory(c.i, c.l)).join('')}</div>
+        </section>
+
+        <div class="promo-row">
+            <div class="promo-box" style="background: #ffebee; color: #c62828;">Flash Sale</div>
+            <div class="promo-box" style="background: #e8f5e9; color: #2e7d32;">New Tech</div>
+            <div class="promo-box" style="background: #e3f2fd; color: #1565c0;">Hot Deals</div>
+        </div>
+
+        <section>
+            <h3 style="margin-bottom:10px">All Providers</h3>
+            <div class="grid-4">${pros.map(p => renderProvider(p.n, p.r)).join('')}</div>
+        </section>
+    `;
+}
+
+
 function renderDashboard() {
     const main = document.getElementById('main-content');
     if (!main) return;
