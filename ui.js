@@ -213,7 +213,11 @@ function renderProfileView(profile, isEditing = false) {
                 <div style="font-size:50px;">👤</div>
                 <h2 style="margin:10px 0;">${profile.first_name}</h2>
                 <p style="color:#888;">${profile.role.toUpperCase()} • ${profile.city}</p>
-                <button onclick="renderProfileView(JSON.parse('${JSON.stringify(profile).replace(/'/g, "\\'")}'), true)" style="background:none; border:1px solid var(--primary); color:var(--primary); padding:5px 15px; border-radius:15px; font-size:12px;">Edit Profile</button>
+                <button onclick="renderProfileView(userSession.full_profile, true)" 
+        style="background:none; border:1px solid var(--primary); color:var(--primary); padding:5px 15px; border-radius:15px; font-size:12px;">
+    Edit Profile
+</button>
+
             </div>
 
             <div class="grid-2" style="margin-top:20px;">
