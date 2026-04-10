@@ -1,69 +1,134 @@
-/* Base Layout */
-#app-container {
-    display: flex;
-    flex-direction: column;
+:root {
+    --primary: #2481cc;
+    --bg: #ffffff;
+    --sec-bg: #f5f7fa;
+    --text: #222;
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+body {
+    margin: 0;
+    font-family: -apple-system, sans-serif;
+    background-color: var(--sec-bg);
+    color: var(--text);
     height: 100vh;
+    overflow: hidden;
 }
 
-#main-content {
-    flex: 1;
-    overflow-y: auto; /* Enables scrolling */
-    padding: 16px;
-    background-color: #f8f9fa; /* Light grey modern background */
-}
+#app-container { display: flex; flex-direction: column; height: 100%; }
 
-/* Modern Header */
 header {
     background: white;
     padding: 15px;
     text-align: center;
+    font-weight: bold;
     border-bottom: 1px solid #eee;
 }
 
-/* Carousel (Ad Box) */
+#main-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+}
+
+/* HORIZONTAL CAROUSEL */
 .carousel-container {
     display: flex;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
+    gap: 10px;
     border-radius: 15px;
+    height: 160px;
     margin-bottom: 20px;
-    height: 150px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
+.carousel-container::-webkit-scrollbar { display: none; }
 
 .ad-slide {
     min-width: 100%;
     scroll-snap-align: start;
+    border-radius: 15px;
     display: flex;
-    align-items: center;
+    flex-direction: column;
     justify-content: center;
+    padding: 20px;
     color: white;
-    font-size: 20px;
 }
 
-/* Service Grid (3 columns for 12 items) */
+/* AUTH CARD */
+.auth-card {
+    background: white;
+    padding: 18px;
+    border-radius: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.auth-btn {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+/* SERVICES GRID */
 .category-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr); /* 4 items per row */
-    gap: 15px;
-    margin: 15px 0;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 25px;
 }
+
+.cat-item { display: flex; flex-direction: column; align-items: center; }
 
 .icon-circle {
     width: 60px;
     height: 60px;
     background: white;
-    border-radius: 18px; /* Modern "Squircle" */
+    border-radius: 18px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 28px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    margin-bottom: 6px;
 }
 
-.cat-item p {
-    font-size: 11px;
-    text-align: center;
-    margin-top: 5px;
-    font-weight: 500;
+.cat-item p { margin: 0; font-size: 11px; font-weight: 500; }
+
+/* HORIZONTAL PROVIDERS */
+.provider-scroll {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding: 10px 0;
 }
+.provider-scroll::-webkit-scrollbar { display: none; }
+
+.provider-item {
+    background: white;
+    min-width: 110px;
+    padding: 15px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.provider-logo {
+    width: 50px;
+    height: 50px;
+    background: #f0f0f0;
+    border-radius: 50%;
+    margin: 0 auto 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--primary);
+}
+
+footer { background: white; padding: 10px; text-align: center; font-size: 12px; color: #888; }
