@@ -18,8 +18,12 @@ function renderRoleSelection() {
     document.getElementById('main-content').innerHTML = `
         <div style="padding: 20px; text-align: center;">
             <h2 style="margin-top: 40px;">Join Habesha Hub</h2>
-            <div class="auth-card" onclick="setRole('guest')" style="flex-direction:column; gap:10px; cursor:pointer;">🛍️ <strong>Register as Guest</strong></div>
-            <div class="auth-card" onclick="setRole('provider')" style="flex-direction:column; gap:10px; cursor:pointer;">🛠️ <strong>Register as Provider</strong></div>
+            <div class="auth-card" onclick="setRole('guest')" style="flex-direction:column; gap:10px; cursor:pointer; padding:25px;">
+                <span style="font-size:30px">🛍️</span><strong>Register as Guest</strong>
+            </div>
+            <div class="auth-card" onclick="setRole('provider')" style="flex-direction:column; gap:10px; cursor:pointer; padding:25px;">
+                <span style="font-size:30px">🛠️</span><strong>Register as Provider</strong>
+            </div>
         </div>`;
 }
 
@@ -63,8 +67,8 @@ function renderDashboard() {
         <div class="grid-4">${Array(4).fill('<div class="ad-box square">Ad</div>').join('')}</div>
         <div class="grid-3">${Array(3).fill('<div class="ad-box rect">Ad</div>').join('')}</div>
         <div class="grid-2">${Array(2).fill('<div class="ad-box rect">Ad</div>').join('')}</div>
-        <div class="ad-box rect">1 Rectangle Ad</div>
-        <div class="ad-box big-sq">1 Big Square Ad</div>
+        <div class="ad-box rect">Featured Banner Ad</div>
+        <div class="ad-box big-sq">Promotion Big Square</div>
 
         <h3>⭐ Top Rated</h3>
         <div class="grid-2">${Array(8).fill('<div class="card" style="border:1px solid gold">👤<br><b>Top Pro</b><br>⭐ 5.0</div>').join('')}</div>
@@ -72,22 +76,29 @@ function renderDashboard() {
         <div class="section-header" style="margin-top:20px"><h3>All Providers</h3><b onclick="handleAction('All Providers')">More</b></div>
         <div class="grid-4">
             ${Array(4).fill('<div class="card paid-gold">👤<br>PAID</div>').join('')}
-            ${Array(12).fill('<div class="card">👤<br>Provider</div>').join('')}
+            ${Array(12).fill('<div class="card">👤<br>Free</div>').join('')}
         </div>
 
-        <div class="grid-4">${Array(4).fill('<div class="ad-box square">Ad</div>').join('')}</div>
+        <div class="grid-4">${Array(4).fill('<div class="ad-box rect">Ad</div>').join('')}</div>
         <section><h3>Talent</h3><div class="grid-3">${Array(9).fill('<div class="card">Talent</div>').join('')}</div></section>
         <div class="grid-3" style="margin-top:10px">${Array(3).fill('<div class="ad-box square">Ad</div>').join('')}</div>
         <div class="big-sq">${renderAdSlider('talent-carousel', '100%')}</div>
 
-        <div class="ad-box rect" style="margin-top:20px">Ad Above Jobs</div>
-        <section><h3>Job Posts</h3><div class="grid-3">${Array(12).fill('<div class="card" style="height:100px">Job Detail</div>').join('')}</div></section>
+        <div class="ad-box rect" style="margin-top:20px">Job Board Promo</div>
+        <section><h3>Job Posts</h3><div class="grid-3">${Array(12).fill('<div class="card" style="height:100px">Job Post</div>').join('')}</div></section>
 
         <div class="grid-2">
             ${renderAdSlider('bottom-c1', '120px')}
             ${renderAdSlider('bottom-c2', '120px')}
         </div>
         
-        <div class="big-sq">${renderAdSlider('footer-track', '100%')}</div>
+        <div class="big-sq" style="margin-bottom: 80px;">${renderAdSlider('footer-track', '100%')}</div>
+
+        <nav>
+            <div onclick="handleAction('Home')" style="text-align:center; color:var(--primary)"><div style="font-size:20px">🏠</div><div style="font-size:10px">Home</div></div>
+            <div onclick="handleAction('Search')" style="text-align:center; color:#888"><div style="font-size:20px">🔍</div><div style="font-size:10px">Search</div></div>
+            <div onclick="handleAction('Orders')" style="text-align:center; color:#888"><div style="font-size:20px">📦</div><div style="font-size:10px">Orders</div></div>
+            <div onclick="handleAction('Profile')" style="text-align:center; color:#888"><div style="font-size:20px">👤</div><div style="font-size:10px">Profile</div></div>
+        </nav>
     `;
 }
