@@ -354,5 +354,17 @@ window.saveProfileUpdates = async function() {
     tg.MainButton.hideProgress();
 };
 
+window.handleLogout = function() {
+    tg.showConfirm("Are you sure you want to log out? You will need to re-verify your profile.", (confirmed) => {
+        if (confirmed) {
+            // We don't delete the DB entry, just clear the local session
+            userSession = null;
+            // Force the app to re-check registration (which will show the sign-up or welcome screen)
+            init(); 
+        }
+    });
+};
+
+
 
 window.addEventListener('load', init);
