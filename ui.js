@@ -48,6 +48,16 @@ function renderPostForm(type) {
             <button onclick="renderDashboard()" style="background:none; border:none; color:var(--primary); font-weight:bold; margin-bottom:15px;">← Back</button>
             <h3>Post new ${label}</h3>
             
+// Add this inside the renderPostForm function in ui.js
+<label style="font-size:12px; color:#888;">Select Category</label>
+<select id="post-category" style="width:100%; padding:12px; margin:8px 0 15px 0; border:1px solid #ddd; border-radius:10px; background:white;">
+    <option value="repair">Repair</option>
+    <option value="cleaning">Cleaning</option>
+    <option value="tech">Tech</option>
+    <option value="talent">Talent</option>
+</select>
+
+
             <div class="card" style="text-align:left; padding:20px;">
                 <label style="font-size:12px; color:#888;">Title / Specialty</label>
                 <input type="text" id="post-title" placeholder="e.g. Expert Electrician" style="width:100%; padding:12px; margin:8px 0 15px 0; border:1px solid #ddd; border-radius:10px;">
