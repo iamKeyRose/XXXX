@@ -23,6 +23,26 @@ function handleAction(msg) {
     tg.showAlert('You selected: ' + msg);
 }
 
+// Reusable Component: Payment Card
+function renderPaymentCard(amount) {
+    return `
+        <div class="card-base" style="background: linear-gradient(135deg, #2ecc71, #27ae60); color: white;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <small style="opacity: 0.8;">Current Balance</small>
+                    <h2 style="margin: 5px 0;">${amount} ETB</h2>
+                </div>
+                <button class="auth-btn" style="background: white; color: #27ae60;" onclick="handlePayment()">Deposit</button>
+            </div>
+        </div>
+    `;
+}
+
+// Add this into your renderDashboard innerHTML
+// (Place it right under the Carousel or Auth Box)
+// ${renderPaymentCard('0.00')}
+
+
 function renderDashboard() {
     const main = document.getElementById('main-content');
 
@@ -41,6 +61,9 @@ function renderDashboard() {
         {i:'🚕', l:'Taxi'}, {i:'🍱', l:'Food'}, {i:'⚡', l:'Electric'}, {i:'🧺', l:'Laundry'},
         {i:'👨‍🎨', l:'Painting'}, {i:'🌿', l:'Garden'}, {i:'🏥', l:'Health'}, {i:'➕', l:'More'}
     ];
+
+${renderPaymentCard('0.00')}
+
 
     const pros = [
         {n:'Abebe', r:'4.9'}, {n:'Selam', r:'5.0'}, {n:'Marta', r:'4.8'}, {n:'Kebede', r:'4.7'},
