@@ -45,6 +45,19 @@ function renderPaymentCard(amount) {
     `;
 }
 
+function renderInlineAd(title, desc, color) {
+    return `
+        <div class="inline-ad" style="background: ${color}; color: white; border-radius: 15px; padding: 15px; margin: 25px 0; display: flex; align-items: center; gap: 15px; position: relative; overflow: hidden;" onclick="handleAction('Ad: ${title}')">
+            <span style="position: absolute; top: 0; right: 0; background: rgba(255,255,255,0.2); font-size: 8px; padding: 2px 6px; border-bottom-left-radius: 8px;">SPONSORED</span>
+            <div style="font-size: 24px;">🎁</div>
+            <div>
+                <div style="font-weight: bold; font-size: 14px;">${title}</div>
+                <div style="font-size: 11px; opacity: 0.9;">${desc}</div>
+            </div>
+        </div>
+    `;
+}
+
 function handleAction(msg) {
     const tg = window.Telegram.WebApp;
     tg.HapticFeedback.impactOccurred('light');
@@ -57,7 +70,7 @@ function renderDashboard() {
     const main = document.getElementById('main-content');
     if (!main) return;
 
-    // 1. Carousel Data (10 Slides)
+    // 1. Data Arrays
     const slides = [
         {t:"Car Wash", d:"20% Off Today", c:"#2481cc"}, {t:"New Salon", d:"Opening Sale", c:"#f4a261"},
         {t:"Repair", d:"Fast Fix", c:"#2a9d8f"}, {t:"Food", d:"Free Delivery", c:"#e63946"},
@@ -66,26 +79,24 @@ function renderDashboard() {
         {t:"Gardening", d:"Full Care", c:"#52b788"}, {t:"Moving", d:"Cheap Rates", c:"#355070"}
     ];
 
-    // 2. Category Data (12 Items)
     const cats = [
         {i:'🛠️', l:'Repair'}, {i:'🧹', l:'Cleaning'}, {i:'🚚', l:'Delivery'}, {i:'💇', l:'Beauty'},
         {i:'🚕', l:'Taxi'}, {i:'🍱', l:'Food'}, {i:'⚡', l:'Electric'}, {i:'🧺', l:'Laundry'},
         {i:'👨‍🎨', l:'Painting'}, {i:'🌿', l:'Garden'}, {i:'🏥', l:'Health'}, {i:'➕', l:'More'}
     ];
 
-    // 3. Top Rated Data
     const tops = [
         {n: 'Abebe C.', c: 'Repair', r: '5.0'},
         {n: 'Selam H.', c: 'Cleaning', r: '4.9'},
         {n: 'Marta L.', c: 'Beauty', r: '5.0'}
     ];
 
-    // 4. All Providers Data (8 Items for 2x4 grid)
     const pros = [
         {n:'Abebe', r:'4.9'}, {n:'Selam', r:'5.0'}, {n:'Marta', r:'4.8'}, {n:'Kebede', r:'4.7'},
         {n:'Desta', r:'4.9'}, {n:'Hanna', r:'5.0'}, {n:'Yonas', r:'4.6'}, {n:'Bekele', r:'4.8'}
     ];
 
+    // 2. HTML Construction
     main.innerHTML = `
         <div class="carousel-container">
             ${slides.map(s => `<div class="ad-slide" style="background:${s.c}"><h2>${s.t}</h2><p>${s.d}</p></div>`).join('')}
@@ -94,33 +105,12 @@ function renderDashboard() {
         ${renderPaymentCard('0.00')}
 
         <div class="auth-card">
-            <div><strong>Habesha Hub Membership</strong><p style="margin:4px 0 0 0; font-size:12px; color:var(--text-muted)">Login with Telegram</p></div>
+            <div><strong>Habesha Hub Membership</strong><p style="margin:4px 0 0 0; font-size:12px; color:var(--text-muted)">Connect Account</p></div>
             <button class="auth-btn" onclick="handleTelegramLogin()">Join</button>
         </div>
 
-        <section style="margin-bottom:25px;">
+        <section>
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px">
                 <h3 style="margin:0">Services</h3><span style="color:var(--primary); font-size:12px; font-weight:bold">View All</span>
             </div>
-            <div class="grid-4">${cats.map(c => renderCategory(c.i, c.l)).join('')}</div>
-        </section>
-
-        <div class="promo-row">
-            <div class="promo-box" style="background: #ffebee; color: #c62828;">Flash Sale</div>
-            <div class="promo-box" style="background: #e8f5e9; color: #2e7d32;">New Tech</div>
-            <div class="promo-box" style="background: #e3f2fd; color: #1565c0;">Hot Deals</div>
-        </div>
-
-        <section style="margin-bottom: 25px;">
-            <h3 style="margin-bottom: 10px;">⭐ Top Rated</h3>
-            <div class="top-rated-scroll" style="display: flex; gap: 15px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none;">
-                ${tops.map(t => renderTopProvider(t.n, t.c, t.r)).join('')}
-            </div>
-        </section>
-
-        <section>
-            <h3 style="margin-bottom:10px">All Providers</h3>
-            <div class="grid-4">${pros.map(p => renderProvider(p.n, p.r)).join('')}</div>
-        </section>
-    `;
-}
+            <div class="grid-4">${cats.
