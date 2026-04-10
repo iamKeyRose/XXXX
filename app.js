@@ -195,4 +195,23 @@ async function viewListingDetail(listingId) {
 }
 
 
+// Add this to app.js
+window.viewListingDetail = async function(listingId) {
+    tg.HapticFeedback.impactOccurred('medium');
+    
+    // FETCH LOGIC
+    const { data, error } = await dbClient
+        .from('listings')
+        .select('*, owner:users(*)')
+        .eq('id', listingId)
+        .single();
+
+    if (error || !data) {
+        return tg.showAlert("Profile details not found.");
+    }
+
+    // Call the UI function to render the full profile
+    renderProfileDetail(data);
+};
+
 window.addEventListener('load', init);
