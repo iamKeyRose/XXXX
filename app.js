@@ -51,5 +51,32 @@ function handleTelegramLogin() {
     }
 }
 
+// Payment Handler
+function handlePayment() {
+    // 1. Check if the user is logged in
+    const user = tg.initDataUnsafe?.user;
+    if (!user) {
+        tg.showAlert("Please join the Hub first!");
+        return;
+    }
+
+    // 2. Open a Telegram Invoice
+    // Note: In a real app, the 'url' comes from your backend after creating an invoice
+    // For now, we show the Telegram UI interaction
+    tg.showConfirm("Proceed to payment via Telegram?", (isConfirmed) => {
+        if (isConfirmed) {
+            // This is where you call your bot to send an invoice link
+            tg.openInvoice("https://t.me/invoice/example_link", (status) => {
+                if (status === 'paid') {
+                    tg.showAlert("Payment Successful! Your balance is updated.");
+                } else if (status === 'failed') {
+                    tg.showAlert("Payment failed. Please try again.");
+                }
+            });
+        }
+    });
+}
+
+
 
 window.addEventListener('load', init);
