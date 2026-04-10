@@ -70,7 +70,6 @@ function renderDashboard() {
     const main = document.getElementById('main-content');
     if (!main) return;
 
-    // 1. Data Arrays
     const slides = [
         {t:"Car Wash", d:"20% Off Today", c:"#2481cc"}, {t:"New Salon", d:"Opening Sale", c:"#f4a261"},
         {t:"Repair", d:"Fast Fix", c:"#2a9d8f"}, {t:"Food", d:"Free Delivery", c:"#e63946"},
@@ -96,7 +95,6 @@ function renderDashboard() {
         {n:'Desta', r:'4.9'}, {n:'Hanna', r:'5.0'}, {n:'Yonas', r:'4.6'}, {n:'Bekele', r:'4.8'}
     ];
 
-    // 2. HTML Construction
     main.innerHTML = `
         <div class="carousel-container">
             ${slides.map(s => `<div class="ad-slide" style="background:${s.c}"><h2>${s.t}</h2><p>${s.d}</p></div>`).join('')}
@@ -113,4 +111,38 @@ function renderDashboard() {
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px">
                 <h3 style="margin:0">Services</h3><span style="color:var(--primary); font-size:12px; font-weight:bold">View All</span>
             </div>
-            <div class="grid-4">${cats.
+            <div class="grid-4">${cats.map(c => renderCategory(c.i, c.l)).join('')}</div>
+        </section>
+
+        ${renderInlineAd("Premium Cleaning", "Book a professional maid today and get 15% off.", "linear-gradient(135deg, #667eea, #764ba2)")}
+
+        <section style="margin-bottom: 25px;">
+            <h3 style="margin-bottom: 10px;">⭐ Top Rated</h3>
+            <div class="top-rated-scroll" style="display: flex; gap: 15px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none;">
+                ${tops.map(t => renderTopProvider(t.n, t.c, t.r)).join('')}
+            </div>
+        </section>
+
+        <div class="promo-row">
+            <div class="promo-box" style="background: #ffebee; color: #c62828;">Flash Sale</div>
+            <div class="promo-box" style="background: #e8f5e9; color: #2e7d32;">New Tech</div>
+            <div class="promo-box" style="background: #e3f2fd; color: #1565c0;">Hot Deals</div>
+        </div>
+
+        <section style="margin-bottom: 80px;">
+            <h3 style="margin-bottom: 5px;">All Providers</h3>
+            <div class="filter-scroll" style="display: flex; gap: 8px; overflow-x: auto; padding: 10px 0; scrollbar-width: none;">
+                <div class="filter-chip" style="padding: 6px 16px; background: var(--primary); color: white; border-radius: 20px; font-size: 12px; white-space: nowrap;">All</div>
+                <div class="filter-chip" style="padding: 6px 16px; background: white; border: 1px solid #ddd; border-radius: 20px; font-size: 12px; white-space: nowrap;">Nearest</div>
+            </div>
+            <div class="grid-4">${pros.map(p => renderProvider(p.n, p.r)).join('')}</div>
+        </section>
+
+        <nav style="position: fixed; bottom: 0; left: 0; width: 100%; height: 65px; background: white; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #eee; z-index: 100;">
+            <div onclick="handleAction('Home')" style="text-align:center; color:var(--primary)"><div style="font-size:20px">🏠</div><div style="font-size:10px">Home</div></div>
+            <div onclick="handleAction('Search')" style="text-align:center; color:#888"><div style="font-size:20px">🔍</div><div style="font-size:10px">Search</div></div>
+            <div onclick="handleAction('Orders')" style="text-align:center; color:#888"><div style="font-size:20px">📦</div><div style="font-size:10px">Orders</div></div>
+            <div onclick="handleAction('Profile')" style="text-align:center; color:#888"><div style="font-size:20px">👤</div><div style="font-size:10px">Profile</div></div>
+        </nav>
+    `;
+}
