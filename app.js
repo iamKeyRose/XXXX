@@ -1,24 +1,34 @@
 const tg = window.Telegram.WebApp;
 
-let userSession = { role: null, type: null, location: null };
+// Global State
+let userSession = {
+    role: null,
+    type: null,
+    location: null
+};
+
 let carouselTimers = [];
 
 function init() {
     tg.ready();
     tg.expand();
     tg.setHeaderColor('#ffffff');
+
+    // Render initial view
     renderDashboard();
+
+    // Start all carousels
     startAllCarousels();
 }
 
 function startAllCarousels() {
-    // Clear existing timers to prevent duplicates
+    // Clear any existing timers
     carouselTimers.forEach(clearInterval);
     carouselTimers = [];
 
-    const carouselIds = ['ad-main-top', 'talent-carousel', 'bottom-c1', 'bottom-c2', 'footer-track'];
+    const ids = ['ad-main-top', 'talent-carousel', 'bottom-c1', 'bottom-c2', 'footer-track'];
     
-    carouselIds.forEach(id => {
+    ids.forEach(id => {
         const track = document.getElementById(id);
         if (!track) return;
 
@@ -34,6 +44,7 @@ function startAllCarousels() {
     });
 }
 
+/* --- REGISTRATION FLOW --- */
 function startRegistration() {
     carouselTimers.forEach(clearInterval);
     renderRoleSelection();
@@ -42,12 +53,20 @@ function startRegistration() {
 function setRole(role) {
     userSession.role = role;
     tg.HapticFeedback.impactOccurred('medium');
+
+    const options = role === 'guest' 
+        ? ['Individual Buyer', 'Company Buyer'] 
+        : ['Professional', 'Company/Agency'];
+
     tg.showPopup({
         title: 'Account Type',
-        message: 'Are you an individual or a business?',
-        buttons: [{id: 'ind', text: 'Individual'}, {id: 'com', text: 'Business'}]
-    }, (btn) => {
-        userSession.type = btn === 'ind' ? 'individual' : 'company';
+        message: `Are you an individual or a business?`,
+        buttons: [
+            {id: 'ind', type: 'default', text: options[0]},
+            {id: 'com', type: 'default', text: options[1]}
+        ]
+    }, (buttonId) => {
+        userSession.type = (buttonId === 'ind') ? 'individual' : 'company';
         renderManualAddressForm();
     });
 }
@@ -55,13 +74,16 @@ function setRole(role) {
 function saveManualAddress() {
     const city = document.getElementById('city').value;
     const area = document.getElementById('area').value;
-    if(!city || !area) return tg.showAlert("Fill all fields");
+    if(!city || !area) {
+        tg.showAlert("Fill all fields.");
+        return;
+    }
     userSession.location = { city, area };
     completeRegistration();
 }
 
 function completeRegistration() {
-    tg.showAlert("Registration Complete!");
+    tg.showAlert("Welcome to Habesha Hub!");
     renderDashboard();
     startAllCarousels();
     window.scrollTo(0, 0);
@@ -69,7 +91,7 @@ function completeRegistration() {
 
 function handleAction(msg) {
     tg.HapticFeedback.impactOccurred('light');
-    tg.showAlert(msg);
+    tg.showAlert('Selected: ' + msg);
 }
 
 window.addEventListener('load', init);
