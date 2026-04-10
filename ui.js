@@ -25,6 +25,8 @@ function handleAction(msg) {
 
 function renderDashboard() {
     const main = document.getElementById('main-content');
+
+
     
     const slides = [
         {t:"Car Wash", d:"20% Off Today", c:"#2481cc"}, {t:"New Salon", d:"Opening Sale", c:"#f4a261"},
@@ -52,7 +54,7 @@ function renderDashboard() {
 
         <div class="auth-card">
             <div><strong>Habesha Hub Membership</strong><p style="margin:4px 0 0 0; font-size:12px; color:var(--text-muted)">Login to track orders</p></div>
-            <button class="auth-btn">Join</button>
+            <button class="auth-btn" onclick="handleTelegramLogin()">Join with Telegram</button>
         </div>
 
         <section style="margin-bottom:25px;">
