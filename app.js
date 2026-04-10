@@ -1,22 +1,17 @@
-function completeRegistration() {
-    const tg = window.Telegram.WebApp;
-    const user = tg.initDataUnsafe?.user;
-    
-    // 1. Success Message
-    tg.showAlert(`Welcome to Habesha Hub! Registered as a ${userSession.type} ${userSession.role}.`);
-    
-    // 2. Refresh the UI to show logged-in state
-    const authCard = document.querySelector('.auth-card');
-    if (authCard && user) {
-        authCard.innerHTML = `
-            <div>
-                <strong>${user.first_name} (${userSession.role})</strong>
-                <p style="margin:4px 0 0 0; font-size:12px; color:var(--text-muted)">${userSession.type} account verified</p>
-            </div>
-            <div style="font-size: 24px;">✅</div>
-        `;
-    }
+// Inside renderDashboard function:
+const authSection = userSession.role ? `
+    <div>
+        <strong>${tg.initDataUnsafe?.user?.first_name || 'User'} (${userSession.role})</strong>
+        <p style="margin:4px 0 0 0; font-size:12px; color:var(--text-muted)">${userSession.type} verified</p>
+    </div>
+    <div style="font-size: 24px;">✅</div>
+` : `
+    <div>
+        <strong>Habesha Hub Membership</strong>
+        <p style="margin:4px 0 0 0; font-size:12px; color:var(--text-muted)">Connect Account</p>
+    </div>
+    <button class="auth-btn" onclick="startRegistration()">Join</button>
+`;
 
-    // 3. Go back to main dashboard
-    renderDashboard();
-}
+// Then in your innerHTML template, use:
+<div class="auth-card">${authSection}</div>
