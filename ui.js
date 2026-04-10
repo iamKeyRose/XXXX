@@ -1,5 +1,4 @@
 /* --- 1. DATA & CONFIG --- */
-
 const adsData = [
     {t:"Car Wash", d:"20% Off Today", c:"#2481cc"}, 
     {t:"New Salon", d:"Opening Sale", c:"#f4a261"},
@@ -17,7 +16,7 @@ function shuffleAds(array) {
     return array.sort(() => Math.random() - 0.5);
 }
 
-/* --- 2. COMPONENT HELPERS (Defined First) --- */
+/* --- 2. COMPONENT HELPERS --- */
 
 function renderPaymentCard(amount) {
     return `
@@ -106,7 +105,7 @@ function renderManualAddressForm() {
     `;
 }
 
-/* --- 4. MAIN RENDER (At the Bottom) --- */
+/* --- 4. MAIN RENDER (ALWAYS LAST) --- */
 
 function renderDashboard() {
     const main = document.getElementById('main-content');
@@ -129,5 +128,49 @@ function renderDashboard() {
         <button class="auth-btn" onclick="startRegistration()">Join</button>
     `;
 
-    const cats = [{i:'🛠️', l:'Repair'}, {i:'🧹', l:'Cleaning'}, {i:'🚚', l:'Delivery'}, {i:'💇', l:'Beauty'}];
-    const tops = [{n: 'Abebe C.', c: 'Repair',
+    const cats = [
+        {i:'🛠️', l:'Repair'}, {i:'🧹', l:'Cleaning'}, 
+        {i:'🚚', l:'Delivery'}, {i:'💇', l:'Beauty'},
+        {i:'🚕', l:'Taxi'}, {i:'🍱', l:'Food'}, 
+        {i:'⚡', l:'Power'}, {i:'🧺', l:'Laundry'},
+        {i:'🎨', l:'Paint'}, {i:'🌿', l:'Plant'}, 
+        {i:'🏥', l:'Med'}, {i:'➕', l:'More'}
+    ];
+
+    const pros = [
+        {n:'Abebe', r:'4.9'}, {n:'Selam', r:'5.0'}, {n:'Marta', r:'4.8'}, {n:'Kebede', r:'4.7'},
+        {n:'Desta', r:'4.9'}, {n:'Hanna', r:'5.0'}, {n:'Yonas', r:'4.6'}, {n:'Bekele', r:'4.8'}
+    ];
+
+    main.innerHTML = `
+        <div class="carousel-container" id="ad-track">
+            ${shuffledSlides.map(s => `<div class="ad-slide" style="background:${s.c}"><h2>${s.t}</h2><p>${s.d}</p></div>`).join('')}
+        </div>
+        
+        ${renderPaymentCard('0.00')}
+        
+        <div class="auth-card">${authSection}</div>
+
+        <section>
+            <h3 style="margin-bottom:10px">Services</h3>
+            <div class="grid-4">${cats.map(c => renderCategory(c.i, c.l)).join('')}</div>
+        </section>
+
+        ${renderInlineAd("Premium Cleaning", "Book today and get 15% off.", "linear-gradient(135deg, #667eea, #764ba2)")}
+
+        <section style="margin-bottom: 80px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                <h3 style="margin:0">All Providers</h3>
+                <span style="color:var(--primary); font-size:12px; font-weight:bold;">More</span>
+            </div>
+            <div class="grid-4">${pros.map(p => renderProvider(p.n, p.r)).join('')}</div>
+        </section>
+
+        <nav style="position: fixed; bottom: 0; left: 0; width: 100%; height: 65px; background: white; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #eee; z-index: 100;">
+            <div onclick="handleAction('Home')" style="text-align:center; color:var(--primary)"><div style="font-size:20px">🏠</div><div style="font-size:10px">Home</div></div>
+            <div onclick="handleAction('Search')" style="text-align:center; color:#888"><div style="font-size:20px">🔍</div><div style="font-size:10px">Search</div></div>
+            <div onclick="handleAction('Orders')" style="text-align:center; color:#888"><div style="font-size:20px">📦</div><div style="font-size:10px">Orders</div></div>
+            <div onclick="handleAction('Profile')" style="text-align:center; color:#888"><div style="font-size:20px">👤</div><div style="font-size:10px">Profile</div></div>
+        </nav>
+    `;
+}
