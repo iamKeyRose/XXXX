@@ -1,9 +1,9 @@
-// 1. Database Configuration (Always at the top)
+// 1. Establish the Connection immediately
 const supabaseUrl = 'https://gwqxqinaltxspwmmrrru.supabase.co';
 const supabaseKey = 'sb_publishable_cC_a06m2_PLJqIZxigQmlQ_EFkdkoPE';
 
-// We name it 'db' to avoid conflict with the global 'supabase' object from the CDN
-const db = supabase.createClient(supabaseUrl, supabaseKey);
+// Using dbClient ensures we don't overwrite the global 'supabase' object
+const dbClient = supabase.createClient(supabaseUrl, supabaseKey);
 
 const tg = window.Telegram.WebApp;
 
@@ -17,22 +17,24 @@ let userSession = {
 
 let carouselTimers = [];
 
-// 2. UPDATED INIT
+// 2. Initialize App & Fetch Data
 async function init() {
     tg.ready();
     tg.expand();
     tg.setHeaderColor('#ffffff');
 
     const user = tg.initDataUnsafe?.user;
-    if (user) {
-        // Use 'db' here
-        const { data } = await db
+    
+    if (user && user.id) {
+        // Look up the user in your Supabase 'users' table
+        const { data, error } = await dbClient
             .from('users')
             .select('*')
             .eq('tg_id', user.id)
             .single();
 
         if (data) {
+            // User exists! Load their saved data into the app
             userSession.role = data.role;
             userSession.type = data.account_type;
             userSession.location = { city: data.city, area: data.area };
@@ -42,6 +44,64 @@ async function init() {
 
     renderDashboard();
     startAllCarousels();
+}
+
+// 3. Save Data to Supabase
+async function completeRegistration() {
+    const user = tg.initDataUnsafe?.user;
+
+    const userData = {
+        tg_id: user?.id || 0,
+        first_name: user?.first_name || 'User',
+        role: userSession.role,
+        account_type: userSession.type,
+        city: userSession.location?.city,
+        area: userSession.location?.area,
+        balance: 0 
+    };
+
+    try {
+        const { error } = await dbClient
+            .from('users')
+            .upsert(userData, { onConflict: 'tg_id' });
+
+        if (error) throw error;
+
+        tg.showAlert("Successfully connected to Habesha Hub!");
+        renderDashboard();
+        startAllCarousels();
+        window.scrollTo(0, 0);
+    } catch (err) {
+        tg.showAlert("Database Error: " + err.message);
+    }
+}
+
+// --- Support Functions ---
+function setRole(role) {
+    userSession.role = role;
+    tg.HapticFeedback.impactOccurred('medium');
+    const options = role === 'guest' ? ['Buyer', 'Company'] : ['Pro', 'Agency'];
+
+    tg.showPopup({
+        title: 'Account Type',
+        message: `Select your registration type:`,
+        buttons: [
+            {id: 'ind', type: 'default', text: options[0]},
+            {id: 'com', type: 'default', text: options[1]}
+        ]
+    }, (btn) => {
+        userSession.type = (btn === 'ind') ? 'individual' : 'company';
+        renderManualAddressForm();
+    });
+}
+
+function saveManualAddress() {
+    const cityVal = document.getElementById('city').value;
+    const areaVal = document.getElementById('area').value;
+    if(!cityVal || !areaVal) return tg.showAlert("Please fill in your location");
+    
+    userSession.location = { city: cityVal, area: areaVal };
+    completeRegistration();
 }
 
 function startAllCarousels() {
@@ -63,72 +123,9 @@ function startAllCarousels() {
     });
 }
 
-/* --- REGISTRATION FLOW --- */
-
-async function completeRegistration() {
-    const user = tg.initDataUnsafe?.user;
-
-    const userData = {
-        tg_id: user?.id || 0,
-        first_name: user?.first_name || 'User',
-        role: userSession.role,
-        account_type: userSession.type,
-        city: userSession.location?.city,
-        area: userSession.location?.area,
-        balance: 0 
-    };
-
-    try {
-        // Use 'db' here
-        const { error } = await db
-            .from('users')
-            .upsert(userData);
-
-        if (error) throw error;
-
-        tg.showAlert("Welcome to Habesha Hub! Data saved.");
-        renderDashboard();
-        startAllCarousels();
-        window.scrollTo(0, 0);
-    } catch (err) {
-        tg.showAlert("Error: " + err.message);
-    }
-}
-
-function setRole(role) {
-    userSession.role = role;
-    tg.HapticFeedback.impactOccurred('medium');
-    const options = role === 'guest' 
-        ? ['Individual Buyer', 'Company Buyer'] 
-        : ['Professional', 'Company/Agency'];
-
-    tg.showPopup({
-        title: 'Account Type',
-        message: `Are you an individual or a business?`,
-        buttons: [
-            {id: 'ind', type: 'default', text: options[0]},
-            {id: 'com', type: 'default', text: options[1]}
-        ]
-    }, (buttonId) => {
-        userSession.type = (buttonId === 'ind') ? 'individual' : 'company';
-        renderManualAddressForm();
-    });
-}
-
-function saveManualAddress() {
-    const city = document.getElementById('city').value;
-    const area = document.getElementById('area').value;
-    if(!city || !area) {
-        tg.showAlert("Fill all fields.");
-        return;
-    }
-    userSession.location = { city, area };
-    completeRegistration();
-}
-
 function handleAction(msg) {
     tg.HapticFeedback.impactOccurred('light');
-    tg.showAlert('Selected: ' + msg);
+    tg.showAlert(msg);
 }
 
 window.addEventListener('load', init);
