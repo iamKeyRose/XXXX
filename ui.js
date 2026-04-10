@@ -1,4 +1,4 @@
-// --- COMPONENT HELPERS ---
+/* --- COMPONENT HELPERS --- */
 
 function renderCategory(icon, label) {
     return `
@@ -18,66 +18,6 @@ function renderProvider(name, rating) {
         </div>
     `;
 }
-
-// Screen A: Role Selection
-function renderRoleSelection() {
-    const main = document.getElementById('main-content');
-    main.innerHTML = `
-        <div style="padding: 20px; text-align: center; animation: fadeIn 0.3s;">
-            <h2 style="margin-top: 40px;">Join Habesha Hub</h2>
-            <p style="color: var(--text-muted); margin-bottom: 30px;">Choose your primary goal</p>
-            
-            <div class="card-base" onclick="setRole('guest')" style="padding:25px; cursor: pointer; margin-bottom: 15px; border: 1px solid #eee;">
-                <div style="font-size: 40px; margin-bottom: 10px;">🛍️</div>
-                <strong>Register as Guest</strong>
-                <p style="font-size: 11px; color: var(--text-muted);">I am looking for services/talent.</p>
-            </div>
-
-            <div class="card-base" onclick="setRole('provider')" style="padding:25px; cursor: pointer; border: 1px solid #eee;">
-                <div style="font-size: 40px; margin-bottom: 10px;">🛠️</div>
-                <strong>Register as Provider</strong>
-                <p style="font-size: 11px; color: var(--text-muted);">I want to sell my services/talent.</p>
-            </div>
-        </div>
-    `;
-}
-
-// Screen B: Manual Address Form
-function renderManualAddressForm() {
-    const main = document.getElementById('main-content');
-    main.innerHTML = `
-        <div style="padding: 20px; animation: fadeIn 0.3s;">
-            <h3>📍 Set Address</h3>
-            <p style="font-size: 12px; color: var(--text-muted);">Ensure your address is accurate for local orders.</p>
-            
-            <div style="margin-top: 20px;">
-                <label style="font-size: 11px; font-weight: bold; color:var(--primary)">City</label>
-                <input type="text" id="city" placeholder="e.g. Addis Ababa or Dubai" 
-                       style="width: 100%; padding: 12px; margin: 8px 0 15px 0; border: 1px solid #ddd; border-radius: 10px;">
-                
-                <label style="font-size: 11px; font-weight: bold; color:var(--primary)">Area / Neighborhood</label>
-                <input type="text" id="area" placeholder="e.g. Bole or Al Barsha" 
-                       style="width: 100%; padding: 12px; margin: 8px 0 25px 0; border: 1px solid #ddd; border-radius: 10px;">
-                
-                <button class="auth-btn" style="width: 100%;" onclick="saveManualAddress()">Finish</button>
-            </div>
-        </div>
-    `;
-}
-
-function saveManualAddress() {
-    const city = document.getElementById('city').value;
-    const area = document.getElementById('area').value;
-    
-    if(!city || !area) {
-        window.Telegram.WebApp.showAlert("Please fill in both City and Area.");
-        return;
-    }
-    
-    userSession.location = { city, area };
-    completeRegistration();
-}
-
 
 function renderTopProvider(name, category, rating) {
     return `
@@ -118,86 +58,94 @@ function renderInlineAd(title, desc, color) {
     `;
 }
 
-function handleAction(msg) {
-    const tg = window.Telegram.WebApp;
-    tg.HapticFeedback.impactOccurred('light');
-    tg.showAlert('Selected: ' + msg);
+/* --- REGISTRATION SCREENS --- */
+
+function renderRoleSelection() {
+    const main = document.getElementById('main-content');
+    main.innerHTML = `
+        <div style="padding: 20px; text-align: center; animation: fadeIn 0.3s;">
+            <h2 style="margin-top: 40px;">Join Habesha Hub</h2>
+            <p style="color: var(--text-muted); margin-bottom: 30px;">Choose your primary goal</p>
+            <div class="card-base" onclick="setRole('guest')" style="padding:25px; cursor: pointer; margin-bottom: 15px; border: 1px solid #eee;">
+                <div style="font-size: 40px; margin-bottom: 10px;">🛍️</div>
+                <strong>Register as Guest</strong>
+                <p style="font-size: 11px; color: var(--text-muted);">I am looking for services/talent.</p>
+            </div>
+            <div class="card-base" onclick="setRole('provider')" style="padding:25px; cursor: pointer; border: 1px solid #eee;">
+                <div style="font-size: 40px; margin-bottom: 10px;">🛠️</div>
+                <strong>Register as Provider</strong>
+                <p style="font-size: 11px; color: var(--text-muted);">I want to sell my services/talent.</p>
+            </div>
+        </div>
+    `;
 }
 
-// --- MAIN RENDER ---
+function renderManualAddressForm() {
+    const main = document.getElementById('main-content');
+    main.innerHTML = `
+        <div style="padding: 20px; animation: fadeIn 0.3s;">
+            <h3>📍 Set Address</h3>
+            <div style="margin-top: 20px;">
+                <label style="font-size: 11px; font-weight: bold;">City</label>
+                <input type="text" id="city" placeholder="e.g. Addis Ababa" style="width: 100%; padding: 12px; margin: 8px 0 15px 0; border: 1px solid #ddd; border-radius: 10px;">
+                <label style="font-size: 11px; font-weight: bold;">Area</label>
+                <input type="text" id="area" placeholder="e.g. Bole" style="width: 100%; padding: 12px; margin: 8px 0 25px 0; border: 1px solid #ddd; border-radius: 10px;">
+                <button class="auth-btn" style="width: 100%;" onclick="saveManualAddress()">Finish</button>
+            </div>
+        </div>
+    `;
+}
+
+/* --- MAIN DASHBOARD --- */
 
 function renderDashboard() {
     const main = document.getElementById('main-content');
     if (!main) return;
 
-    const slides = [
-        {t:"Car Wash", d:"20% Off Today", c:"#2481cc"}, {t:"New Salon", d:"Opening Sale", c:"#f4a261"},
-        {t:"Repair", d:"Fast Fix", c:"#2a9d8f"}, {t:"Food", d:"Free Delivery", c:"#e63946"},
-        {t:"Cleaning", d:"Deep Clean", c:"#457b9d"}, {t:"Electric", d:"24/7 Service", c:"#ffb703"},
-        {t:"Plumbing", d:"Expert Care", c:"#219ebc"}, {t:"Laundry", d:"Express Wash", c:"#6d597a"},
-        {t:"Gardening", d:"Full Care", c:"#52b788"}, {t:"Moving", d:"Cheap Rates", c:"#355070"}
-    ];
+    // Logic to show "Join" or "Logged In" state
+    const user = window.Telegram.WebApp.initDataUnsafe?.user;
+    const authSection = userSession.role ? `
+        <div>
+            <strong>${user?.first_name || 'User'} (${userSession.role})</strong>
+            <p style="margin:4px 0 0 0; font-size:12px; color:var(--text-muted)">${userSession.type} verified</p>
+        </div>
+        <div style="font-size: 24px;">✅</div>
+    ` : `
+        <div>
+            <strong>Habesha Hub Membership</strong>
+            <p style="margin:4px 0 0 0; font-size:12px; color:var(--text-muted)">Connect Account</p>
+        </div>
+        <button class="auth-btn" onclick="startRegistration()">Join</button>
+    `;
 
-    const cats = [
-        {i:'🛠️', l:'Repair'}, {i:'🧹', l:'Cleaning'}, {i:'🚚', l:'Delivery'}, {i:'💇', l:'Beauty'},
-        {i:'🚕', l:'Taxi'}, {i:'🍱', l:'Food'}, {i:'⚡', l:'Electric'}, {i:'🧺', l:'Laundry'},
-        {i:'👨‍🎨', l:'Painting'}, {i:'🌿', l:'Garden'}, {i:'🏥', l:'Health'}, {i:'➕', l:'More'}
-    ];
-
-    const tops = [
-        {n: 'Abebe C.', c: 'Repair', r: '5.0'},
-        {n: 'Selam H.', c: 'Cleaning', r: '4.9'},
-        {n: 'Marta L.', c: 'Beauty', r: '5.0'}
-    ];
-
-    const pros = [
-        {n:'Abebe', r:'4.9'}, {n:'Selam', r:'5.0'}, {n:'Marta', r:'4.8'}, {n:'Kebede', r:'4.7'},
-        {n:'Desta', r:'4.9'}, {n:'Hanna', r:'5.0'}, {n:'Yonas', r:'4.6'}, {n:'Bekele', r:'4.8'}
-    ];
+    const slides = [{t:"Car Wash", d:"20% Off", c:"#2481cc"}, {t:"Salon", d:"Sale", c:"#f4a261"}, {t:"Repair", d:"Fast", c:"#2a9d8f"}];
+    const cats = [{i:'🛠️', l:'Repair'}, {i:'🧹', l:'Cleaning'}, {i:'🚚', l:'Delivery'}, {i:'💇', l:'Beauty'}];
+    const tops = [{n: 'Abebe C.', c: 'Repair', r: '5.0'}, {n: 'Selam H.', c: 'Cleaning', r: '4.9'}];
+    const pros = [{n:'Abebe', r:'4.9'}, {n:'Selam', r:'5.0'}, {n:'Marta', r:'4.8'}, {n:'Kebede', r:'4.7'}];
 
     main.innerHTML = `
         <div class="carousel-container">
             ${slides.map(s => `<div class="ad-slide" style="background:${s.c}"><h2>${s.t}</h2><p>${s.d}</p></div>`).join('')}
         </div>
-
         ${renderPaymentCard('0.00')}
-
-        <div class="auth-card">
-            <div><strong>Habesha Hub Membership</strong><p style="margin:4px 0 0 0; font-size:12px; color:var(--text-muted)">Connect Account</p></div>
-            <button class="auth-btn" onclick="handleTelegramLogin()">Join</button>
-        </div>
-
+        <div class="auth-card">${authSection}</div>
         <section>
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px">
                 <h3 style="margin:0">Services</h3><span style="color:var(--primary); font-size:12px; font-weight:bold">View All</span>
             </div>
             <div class="grid-4">${cats.map(c => renderCategory(c.i, c.l)).join('')}</div>
         </section>
-
-        ${renderInlineAd("Premium Cleaning", "Book a professional maid today and get 15% off.", "linear-gradient(135deg, #667eea, #764ba2)")}
-
+        ${renderInlineAd("Premium Cleaning", "Book today and get 15% off.", "linear-gradient(135deg, #667eea, #764ba2)")}
         <section style="margin-bottom: 25px;">
             <h3 style="margin-bottom: 10px;">⭐ Top Rated</h3>
             <div class="top-rated-scroll" style="display: flex; gap: 15px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none;">
                 ${tops.map(t => renderTopProvider(t.n, t.c, t.r)).join('')}
             </div>
         </section>
-
-        <div class="promo-row">
-            <div class="promo-box" style="background: #ffebee; color: #c62828;">Flash Sale</div>
-            <div class="promo-box" style="background: #e8f5e9; color: #2e7d32;">New Tech</div>
-            <div class="promo-box" style="background: #e3f2fd; color: #1565c0;">Hot Deals</div>
-        </div>
-
         <section style="margin-bottom: 80px;">
             <h3 style="margin-bottom: 5px;">All Providers</h3>
-            <div class="filter-scroll" style="display: flex; gap: 8px; overflow-x: auto; padding: 10px 0; scrollbar-width: none;">
-                <div class="filter-chip" style="padding: 6px 16px; background: var(--primary); color: white; border-radius: 20px; font-size: 12px; white-space: nowrap;">All</div>
-                <div class="filter-chip" style="padding: 6px 16px; background: white; border: 1px solid #ddd; border-radius: 20px; font-size: 12px; white-space: nowrap;">Nearest</div>
-            </div>
             <div class="grid-4">${pros.map(p => renderProvider(p.n, p.r)).join('')}</div>
         </section>
-
         <nav style="position: fixed; bottom: 0; left: 0; width: 100%; height: 65px; background: white; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #eee; z-index: 100;">
             <div onclick="handleAction('Home')" style="text-align:center; color:var(--primary)"><div style="font-size:20px">🏠</div><div style="font-size:10px">Home</div></div>
             <div onclick="handleAction('Search')" style="text-align:center; color:#888"><div style="font-size:20px">🔍</div><div style="font-size:10px">Search</div></div>
