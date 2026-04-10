@@ -248,4 +248,21 @@ window.viewListingDetail = async function(listingId) {
     renderProfileDetail(data);
 };
 
+async function openMyProfile() {
+    tg.HapticFeedback.impactOccurred('light');
+    const userId = tg.initDataUnsafe?.user?.id;
+
+    // Fetch fresh data to show latest ratings/revenue
+    const { data: profile, error } = await dbClient
+        .from('users')
+        .select('*')
+        .eq('tg_id', userId)
+        .single();
+
+    if (error) return tg.showAlert("Could not load profile.");
+
+    renderProfileView(profile);
+}
+
+
 window.addEventListener('load', init);
