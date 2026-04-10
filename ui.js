@@ -125,6 +125,60 @@ function renderManualAddressForm() {
         </div>`;
 }
 
+function renderProfileDetail(item) {
+    const main = document.getElementById('main-content');
+    const owner = item.owner || {};
+
+    main.innerHTML = `
+        <div style="padding: 15px; padding-bottom: 80px;">
+            <button onclick="renderDashboard()" style="background:none; border:none; color:var(--primary); font-weight:bold; margin-bottom:15px;">← Back</button>
+            
+            <div class="card" style="text-align:center; padding:20px;">
+                <div style="font-size:60px;">👤</div>
+                <h2 style="margin:10px 0 5px 0;">${item.title}</h2>
+                <p style="color:#888; margin:0;">${owner.first_name || 'Anonymous'} • ${owner.city || 'Location N/A'}</p>
+                <div style="margin-top:10px; font-weight:bold; color:var(--primary); font-size:20px;">${item.price} ETB</div>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; margin:20px 0; gap:10px;">
+                <div class="card" style="flex:1; text-align:center; padding:10px;">
+                    <div style="font-size:12px; color:#888;">Rating</div>
+                    <div style="font-weight:bold;">⭐ 4.9</div>
+                </div>
+                <div class="card" style="flex:1; text-align:center; padding:10px;">
+                    <div style="font-size:12px; color:#888;">Deals</div>
+                    <div style="font-weight:bold;">124</div>
+                </div>
+                <div class="card" style="flex:1; text-align:center; padding:10px;">
+                    <div style="font-size:12px; color:#888;">Reviews</div>
+                    <div style="font-weight:bold;">89</div>
+                </div>
+            </div>
+
+            <div class="card" style="padding:15px; text-align:left;">
+                <h4 style="margin-top:0;">About this Talent</h4>
+                <p style="font-size:14px; color:#444; line-height:1.5;">${item.description}</p>
+            </div>
+
+            <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:10px; margin-top:20px;">
+                <button class="card" onclick="tg.showAlert('Coming soon: Internal Chat')" style="padding:10px; border:none;">💬 Chat</button>
+                <button class="card" onclick="window.open('https://t.me/${owner.username || ''}')" style="padding:10px; border:none;">✈️ Telegram</button>
+                <button class="card" onclick="tg.showAlert('WhatsApp click')" style="padding:10px; border:none;">📞 WhatsApp</button>
+                <button class="card" onclick="tg.showAlert('Email click')" style="padding:10px; border:none;">📧 Email</button>
+                <button class="card" onclick="tg.showAlert('Call click')" style="padding:10px; border:none;">📱 Call</button>
+                <button class="card" onclick="tg.showAlert('Added to Favs')" style="padding:10px; border:none;">❤️ Favorite</button>
+            </div>
+            
+            <div style="margin-top:30px; border-top:1px solid #eee; padding-top:20px;">
+                <h4 style="color:#888;">Professional History</h4>
+                <p style="font-size:12px;">Total Opportunities: 240</p>
+                <p style="font-size:12px;">Estimated Revenue: Private</p>
+            </div>
+        </div>
+    `;
+}
+
+
 /* --- MAIN DASHBOARD --- */
 function renderDashboard() {
     const main = document.getElementById('main-content');
