@@ -130,27 +130,26 @@ function openPostMenu() {
 /**
  * LISTING SUBMISSION LOGIC
  */
-async function submitPost(type) {
-    const category = document.getElementById('post-category').value;
-// Add category to your postData object before inserting into Supabase
-
-const title = document.getElementById('post-title').value;
+async function submitPost(actionType) {
+    // 1. Grab the actual category from the dropdown
+    const selectedCategory = document.getElementById('post-category').value;
+    
+    const title = document.getElementById('post-title').value;
     const description = document.getElementById('post-desc').value;
     const price = document.getElementById('post-price').value;
 
-    // 1. Basic Validation
     if (!title || !description) {
         tg.showAlert("Please provide a title and description.");
         return;
     }
 
-    tg.showConfirm(`Confirm: Publish this ${type}?`, async (confirmed) => {
+    tg.showConfirm(`Confirm: Publish this?`, async (confirmed) => {
         if (confirmed) {
             const user = tg.initDataUnsafe?.user;
 
             const postData = {
                 user_id: user?.id,
-                type: type,
+                type: selectedCategory, // FIX: Use selectedCategory, not actionType
                 title: title,
                 description: description,
                 price: parseFloat(price) || 0,
@@ -158,7 +157,6 @@ const title = document.getElementById('post-title').value;
             };
 
             try {
-                // 2. Insert into Supabase 'listings' table
                 const { error } = await dbClient
                     .from('listings')
                     .insert([postData]);
@@ -166,9 +164,8 @@ const title = document.getElementById('post-title').value;
                 if (error) throw error;
 
                 tg.HapticFeedback.notificationOccurred('success');
-                tg.showAlert("Published successfully!");
-                
-                // 3. Return to Dashboard
+                tg.showAlert(`Published in ${selectedCategory}!`);
+
                 renderDashboard();
                 window.scrollTo(0, 0);
             } catch (err) {
@@ -177,6 +174,7 @@ const title = document.getElementById('post-title').value;
         }
     });
 }
+
 
 
 window.addEventListener('load', init);
