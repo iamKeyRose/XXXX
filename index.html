@@ -64,19 +64,32 @@
         </footer>
     </div>
 
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-
     <script>
+    // 1. Define everything inside a function to keep it safe
+    function startApp() {
         const tg = window.Telegram.WebApp;
+
+        // 2. Tell Telegram we are ready
         tg.ready();
 
-        // Use a small delay to ensure the container is ready before expanding
-        setTimeout(() => {
-            tg.expand();
-        }, 150);
+        // 3. Force the screen to expand
+        tg.expand();
 
-        // Optional: Change the header color to match the theme
-        tg.setHeaderColor('secondary_bg_color');
-    </script>
+        // 4. Update the content so you know it worked
+        // If "App is Loading" changes to "Hello World", the link is perfect!
+        document.getElementById('app-container').innerHTML = `
+            <header><h1>Habesha Hub</h1></header>
+            <main style="padding: 20px; text-align: center;">
+                <h2>Welcome, ${tg.initDataUnsafe?.user?.first_name || 'User'}!</h2>
+                <p>The app is now live and connected.</p>
+                <button class="service-button" onclick="tg.close()">Close App</button>
+            </main>
+        `;
+    }
+
+    // 5. Run the function only after the full page loads
+    window.onload = startApp;
+</script>
+
 </body>
 </html>
