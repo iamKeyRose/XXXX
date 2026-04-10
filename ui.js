@@ -65,6 +65,47 @@ function renderPostForm(type) {
 }
 
 
+async function showCategoryItems(categoryName) {
+    const main = document.getElementById('main-content');
+    main.innerHTML = `<div style="padding:20px; text-align:center;">Searching for ${categoryName}...</div>`;
+
+    // Fetch only items matching this category
+    const { data, error } = await dbClient
+        .from('listings')
+        .select('*')
+        .eq('type', categoryName.toLowerCase()) // Match the category name
+        .eq('status', 'active');
+
+    if (error) {
+        tg.showAlert("Error: " + error.message);
+        return;
+    }
+
+    let listHtml = `
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:15px;">
+            <button onclick="renderDashboard()" style="background:none; border:none; color:var(--primary); font-size:18px;">←</button>
+            <h2 style="margin:0">${categoryName}</h2>
+        </div>`;
+
+    if (data.length === 0) {
+        listHtml += `<div style="text-align:center; padding:40px; color:#888;">No ${categoryName} listed yet.</div>`;
+    } else {
+        listHtml += `<div class="grid-2">`;
+        data.forEach(item => {
+            listHtml += `
+                <div class="card" onclick="tg.showAlert('${item.description}')">
+                    <div style="font-size:30px">📦</div>
+                    <div style="font-weight:bold; margin-top:5px;">${item.title}</div>
+                    <div style="color:var(--primary); font-size:12px;">${item.price} ETB</div>
+                </div>`;
+        });
+        listHtml += `</div>`;
+    }
+
+    main.innerHTML = `<div style="padding:15px;">${listHtml}</div>`;
+}
+
+
 function renderManualAddressForm() {
     document.getElementById('main-content').innerHTML = `
         <div style="padding: 20px;"><h3>📍 Set Address</h3>
