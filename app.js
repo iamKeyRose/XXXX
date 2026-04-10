@@ -131,7 +131,10 @@ function openPostMenu() {
  * LISTING SUBMISSION LOGIC
  */
 async function submitPost(type) {
-    const title = document.getElementById('post-title').value;
+    const category = document.getElementById('post-category').value;
+// Add category to your postData object before inserting into Supabase
+
+const title = document.getElementById('post-title').value;
     const description = document.getElementById('post-desc').value;
     const price = document.getElementById('post-price').value;
 
