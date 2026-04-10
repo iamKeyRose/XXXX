@@ -16,12 +16,14 @@ function renderAdSlider(id, height = "140px") {
 
 /* --- COMPONENTS --- */
 function renderCategory(icon, label) {
+    // We pass the label so handleAction knows which category to fetch
     return `
-        <div class="card" onclick="handleAction('${label}')" style="cursor:pointer;">
+        <div class="card" onclick="handleAction('category', '${label}')" style="cursor:pointer;">
             <div style="font-size:24px">${icon}</div>
             <div style="font-size:10px;margin-top:5px">${label}</div>
         </div>`;
 }
+
 
 /* --- REGISTRATION SCREENS --- */
 function renderRoleSelection() {
