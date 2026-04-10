@@ -1,21 +1,23 @@
-const tg = window.Telegram.WebApp;
-
-// 1. ADD SUPABASE CONFIG AT THE TOP
+// 1. Database Configuration (Always at the top)
 const supabaseUrl = 'https://gwqxqinaltxspwmmrrru.supabase.co';
 const supabaseKey = 'sb_publishable_cC_a06m2_PLJqIZxigQmlQ_EFkdkoPE';
-const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+// We name it 'db' to avoid conflict with the global 'supabase' object from the CDN
+const db = supabase.createClient(supabaseUrl, supabaseKey);
+
+const tg = window.Telegram.WebApp;
 
 // Global State
 let userSession = {
     role: null,
     type: null,
     location: null,
-    balance: 0 // Added this
+    balance: 0 
 };
 
 let carouselTimers = [];
 
-// 2. UPDATED INIT (Checks DB for returning users)
+// 2. UPDATED INIT
 async function init() {
     tg.ready();
     tg.expand();
@@ -23,7 +25,8 @@ async function init() {
 
     const user = tg.initDataUnsafe?.user;
     if (user) {
-        const { data } = await supabase
+        // Use 'db' here
+        const { data } = await db
             .from('users')
             .select('*')
             .eq('tg_id', user.id)
@@ -33,7 +36,7 @@ async function init() {
             userSession.role = data.role;
             userSession.type = data.account_type;
             userSession.location = { city: data.city, area: data.area };
-            userSession.balance = data.balance;
+            userSession.balance = data.balance || 0;
         }
     }
 
@@ -62,7 +65,6 @@ function startAllCarousels() {
 
 /* --- REGISTRATION FLOW --- */
 
-// 3. MERGED COMPLETE REGISTRATION (One function only!)
 async function completeRegistration() {
     const user = tg.initDataUnsafe?.user;
 
@@ -77,7 +79,8 @@ async function completeRegistration() {
     };
 
     try {
-        const { error } = await supabase
+        // Use 'db' here
+        const { error } = await db
             .from('users')
             .upsert(userData);
 
@@ -120,7 +123,7 @@ function saveManualAddress() {
         return;
     }
     userSession.location = { city, area };
-    completeRegistration(); // Calls the async function above
+    completeRegistration();
 }
 
 function handleAction(msg) {
