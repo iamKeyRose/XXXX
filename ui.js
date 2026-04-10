@@ -241,14 +241,22 @@ function renderProfileView(profile, isEditing = false) {
     }
 
     main.innerHTML = `
-        <div style="padding:15px; padding-bottom:80px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                <h2 style="margin:0;">My Profile</h2>
-                <span style="background:var(--primary); color:white; padding:2px 8px; border-radius:10px; font-size:10px;">${profile.account_type}</span>
-            </div>
-            ${content}
+    <div style="padding:15px; padding-bottom:80px;">
+        <div style="display:flex; align-items:center; margin-bottom:15px;">
+            <button onclick="renderDashboard()" style="background:none; border:none; color:var(--primary); font-size:18px; padding:0; cursor:pointer; display:flex; align-items:center; gap:5px;">
+                <span>←</span> <span style="font-size:14px; font-weight:bold;">Back to Home</span>
+            </button>
         </div>
-    `;
+
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h2 style="margin:0;">My Profile</h2>
+            <span style="background:var(--primary); color:white; padding:2px 8px; border-radius:10px; font-size:10px;">${profile.account_type || 'FREE'}</span>
+        </div>
+        
+        ${content}
+    </div>
+`;
+
 }
 
 /* --- MAIN DASHBOARD --- */
