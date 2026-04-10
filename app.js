@@ -175,6 +175,24 @@ async function submitPost(actionType) {
     });
 }
 
+async function viewListingDetail(listingId) {
+    tg.HapticFeedback.impactOccurred('medium');
+    
+    // 1. Fetch listing AND the owner profile in one go
+    // Note: This requires a Foreign Key relationship in Supabase
+    const { data, error } = await dbClient
+        .from('listings')
+        .select(`
+            *,
+            owner:users(first_name, city, area, role, account_type)
+        `)
+        .eq('id', listingId)
+        .single();
+
+    if (error) return tg.showAlert("Error loading profile: " + error.message);
+
+    renderProfileDetail(data);
+}
 
 
 window.addEventListener('load', init);
