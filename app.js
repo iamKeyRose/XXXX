@@ -7,8 +7,22 @@ function init() {
 
     if (typeof renderDashboard === 'function') {
         renderDashboard();
+        startCarousel();
     }
 }
 
-// Load init once everything is ready
+function startCarousel() {
+    const track = document.querySelector('.carousel-container');
+    if (!track) return;
+
+    setInterval(() => {
+        const width = track.offsetWidth;
+        if (track.scrollLeft >= (track.scrollWidth - width - 10)) {
+            track.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+            track.scrollBy({ left: width, behavior: 'smooth' });
+        }
+    }, 3000);
+}
+
 window.addEventListener('load', init);
