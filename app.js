@@ -10,67 +10,64 @@ const tg = window.Telegram.WebApp;
 const dbClient = supabase.createClient(supabaseUrl, supabaseKey);
 
 async function init() {
+    console.log("App Initializing...");
     tg.ready();
-    // BROWSER BYPASS: If no Telegram user, use a fake ID for testing
-    const user = tg.initDataUnsafe?.user || { id: 12345, username: 'browser_test' };
+    tg.expand();
 
-    // Remove the "Open in Telegram" block so you can see your work
-    const { data, error } = await dbClient
-        .from('users')
-        .select('*')
-        .eq('tg_id', user.id)
-        .maybeSingle();
+    // 1. Get User (with Browser Fallback)
+    const user = tg.initDataUnsafe?.user || { id: 99999, first_name: "Developer" };
 
-    if (data) {
-        renderDashboard(data);
-    } else {
-        renderRoleSelection();
+    // 2. Clear "Loading" text from HTML
+    const main = document.getElementById('main-content');
+    main.innerHTML = '<p style="text-align:center;">Checking account...</p>';
+
+    try {
+        // 3. Check Supabase
+        const { data, error } = await dbClient
+            .from('users')
+            .select('*')
+            .eq('tg_id', user.id)
+            .maybeSingle();
+
+        if (error) throw error;
+
+        if (data) {
+            renderDashboard(data);
+        } else {
+            renderRoleSelection();
+        }
+    } catch (err) {
+        console.error("Init Error:", err);
+        // If DB fails, we still show the Selection so you can fix the UI
+        renderRoleSelection(); 
     }
 }
 
+// Ensure the button logic is GLOBAL
 window.submitRegistration = async function(role) {
-    const nameInput = document.getElementById('reg-name');
-    const phoneInput = document.getElementById('reg-phone');
-    
-    if (!nameInput || !phoneInput) return;
-
-    const name = nameInput.value;
-    const phone = phoneInput.value;
-    const user = tg.initDataUnsafe?.user || { id: 12345, username: 'browser_test' };
+    const name = document.getElementById('reg-name').value;
+    const phone = document.getElementById('reg-phone').value;
+    const user = tg.initDataUnsafe?.user || { id: 99999 };
 
     if (!name || !phone) {
         alert("Please fill in all fields.");
         return;
     }
 
-    // Force feedback so you know the button is working
-    console.log("Attempting to save...", { name, phone, role });
-
     const { error } = await dbClient.from('users').insert([{
         tg_id: user.id,
         full_name: name,
         phone: phone,
         role: role,
-        is_verified: false,
-        account_tier: 'basic'
+        is_verified: false
     }]);
 
     if (!error) {
-        alert("Account created successfully!");
-        init(); 
+        alert("Success!");
+        init(); // Go to dashboard
     } else {
-        alert("Database Error: " + error.message);
+        alert("Save Error: " + error.message);
     }
 };
-
-function renderDashboard(profile) {
-    document.getElementById('main-content').innerHTML = `
-        <div class="card">
-            <h3>Welcome, ${profile.full_name}</h3>
-            <p>You are registered as a <b>${profile.role}</b></p>
-            <button onclick="localStorage.clear(); location.reload();" class="btn" style="background:#888;">Logout (Test)</button>
-        </div>
-    `;
-}
 
 init();
