@@ -79,11 +79,9 @@ function renderRegistrationForm(role) {
                 ` : ''}
             </div>
 
-            <button onclick="submitRegistration('${role}')" 
-                    style="width:100%; padding:16px; background:${buttonColor}; color:white; border:none; border-radius:12px; font-weight:bold; font-size:16px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-                Create My Account
-            </button>
-        </div>
+            <button onclick="submitRegistration('${role}')" style="...">
+    Create My Account
+</button>
     `;
 }
 
