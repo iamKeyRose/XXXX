@@ -27,18 +27,26 @@ function renderCategory(icon, label) {
 
 /* --- REGISTRATION SCREENS --- */
 function renderRoleSelection() {
-    document.getElementById('main-content').innerHTML = `
-        <div style="padding: 20px; text-align: center;">
-            <h2 style="margin-top: 40px;">Join Habesha Hub</h2>
-            <div class="auth-card" onclick="setRole('guest')" style="flex-direction:column; gap:10px; cursor:pointer; padding:25px;">
-                <span style="font-size:30px">🛍️</span><strong>Register as Guest</strong>
+    const main = document.getElementById('main-content');
+    main.innerHTML = `
+        <div style="padding:30px; text-align:center;">
+            <h2>Welcome to Evently</h2>
+            <p>How would you like to use the platform?</p>
+            
+            <div onclick="renderRegistrationForm('planner')" class="card" style="margin-bottom:15px; border:2px solid var(--primary); padding:20px;">
+                <div style="font-size:40px;">📅</div>
+                <h3 style="margin:10px 0;">I'm Planning an Event</h3>
+                <small>Find providers and manage my budget</small>
             </div>
-            <div class="auth-card" onclick="setRole('provider')" style="flex-direction:column; gap:10px; cursor:pointer; padding:25px;">
-                <span style="font-size:30px">🛠️</span><strong>Register as Provider</strong>
-            </div>
-        </div>`;
-}
 
+            <div onclick="renderRegistrationForm('provider')" class="card" style="border:2px solid #2ecc71; padding:20px;">
+                <div style="font-size:40px;">🏢</div>
+                <h3 style="margin:10px 0;">I'm a Service Provider</h3>
+                <small>Grow my business and find clients</small>
+            </div>
+        </div>
+    `;
+}
 function renderPostForm(type) {
     const main = document.getElementById('main-content');
     const label = type.charAt(0).toUpperCase() + type.slice(1);
