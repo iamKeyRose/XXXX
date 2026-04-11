@@ -72,6 +72,47 @@ function startRegistration() {
     renderRoleSelection();
 }
 
+window.submitRegistration = async function(role) {
+    const user = tg.initDataUnsafe?.user;
+    
+    // Safety check for Telegram User
+    if (!user || !user.id) {
+        return tg.showAlert("Telegram user data not found. Please restart the app.");
+    }
+
+    const name = document.getElementById('reg-name').value;
+    const phone = document.getElementById('reg-phone').value;
+
+    if (!name || !phone) {
+        return tg.showAlert("Please fill in all fields.");
+    }
+
+    // Visual feedback
+    tg.MainButton.setText("Saving...");
+    tg.MainButton.showLoading();
+
+    const { error } = await dbClient.from('users').insert([{
+        tg_id: user.id,
+        username: user.username || 'N/A',
+        full_name: name,
+        phone: phone,
+        role: role,
+        is_verified: false, // Defaulting to false for the 345 ETB paywall
+        account_tier: 'basic'
+    }]);
+
+    if (!error) {
+        tg.HapticFeedback.notificationOccurred('success');
+        tg.showAlert("Registration successful!");
+        init(); // Refresh the app state to show the Dashboard
+    } else {
+        console.error("Supabase Error:", error);
+        tg.showAlert("Error: " + error.message);
+    }
+    
+    tg.MainButton.hide();
+};
+
 function setRole(role) {
     userSession.role = role;
     tg.HapticFeedback.impactOccurred('medium');
