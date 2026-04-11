@@ -87,6 +87,43 @@ function renderRegistrationForm(role) {
     `;
 }
 
+// Add "window." to the front so the button can "see" it
+window.submitRegistration = async function(role) {
+    console.log("Button clicked for role:", role); // This helps you debug
+    
+    const user = tg.initDataUnsafe?.user;
+    const nameInput = document.getElementById('reg-name');
+    const phoneInput = document.getElementById('reg-phone');
+
+    if (!nameInput || !phoneInput) {
+        console.error("Input fields not found in the DOM");
+        return;
+    }
+
+    const name = nameInput.value;
+    const phone = phoneInput.value;
+
+    if (!name || !phone) {
+        tg.showAlert("Please fill in all fields.");
+        return;
+    }
+
+    // Logic to insert into Supabase...
+    const { error } = await dbClient.from('users').insert([{
+        tg_id: user.id,
+        full_name: name,
+        phone: phone,
+        role: role,
+        is_verified: false
+    }]);
+
+    if (!error) {
+        tg.showAlert("Registration successful!");
+        init(); 
+    } else {
+        tg.showAlert("Error: " + error.message);
+    }
+};
 
 async function showCategoryItems(categoryName) {
     const main = document.getElementById('main-content');
