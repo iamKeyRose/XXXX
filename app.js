@@ -4,7 +4,6 @@ const dbClient = supabase.createClient(supabaseUrl, supabaseKey);
 
 const tg = window.Telegram.WebApp;
 
-const tg = window.Telegram.WebApp;
 // Ensure these match your actual Supabase project
 //const supabaseUrl = 'YOUR_URL';
 //const supabaseKey = 'YOUR_KEY';
