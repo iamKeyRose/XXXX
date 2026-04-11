@@ -57,5 +57,19 @@ input {
     cursor: pointer;
 }
 
+.back-btn {
+    background: none;
+    border: none;
+    color: var(--primary);
+    font-weight: bold;
+    cursor: pointer;
+    padding: 5px 0;
+    font-size: 14px;
+}
+
+.back-btn:hover {
+    text-decoration: underline;
+}
+
 .btn-planner { background-color: var(--primary); }
 .btn-provider { background-color: var(--secondary); }
