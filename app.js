@@ -44,6 +44,29 @@ async function init() {
     }
 }
 
+async function submitRegistration(role) {
+    const user = tg.initDataUnsafe?.user;
+    const name = document.getElementById('reg-name').value;
+    const phone = document.getElementById('reg-phone').value;
+
+    if (!name || !phone) return tg.showAlert("Please fill in all fields.");
+
+    const { error } = await dbClient.from('users').insert([{
+        tg_id: user.id,
+        full_name: name,
+        phone: phone,
+        role: role,
+        is_verified: false // They must pay the 345 ETB later if they are a provider
+    }]);
+
+    if (!error) {
+        tg.showAlert("Registration successful!");
+        init(); // Re-run init to load the correct dashboard
+    } else {
+        tg.showAlert("Error: " + error.message);
+    }
+}
+
 function startRegistration() {
     tg.HapticFeedback.impactOccurred('light');
     renderRoleSelection();
