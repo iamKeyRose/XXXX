@@ -47,37 +47,42 @@ function renderRoleSelection() {
         </div>
     `;
 }
-function renderPostForm(type) {
+
+function renderRegistrationForm(role) {
     const main = document.getElementById('main-content');
-    const label = type.charAt(0).toUpperCase() + type.slice(1);
+    
+    // Customize text based on the choice made in Role Selection
+    const title = role === 'provider' ? 'Service Provider Signup' : 'Event Planner Signup';
+    const subtext = role === 'provider' ? 'Start growing your event business today.' : 'Plan your perfect event within budget.';
+    const buttonColor = role === 'provider' ? '#2ecc71' : 'var(--primary)';
 
     main.innerHTML = `
-        <div style="padding: 10px;">
-            <button onclick="renderDashboard()" style="background:none; border:none; color:var(--primary); font-weight:bold; margin-bottom:15px;">← Back</button>
-            <h3>Post new ${label}</h3>
+        <div style="padding:25px; text-align:center;">
+            <button onclick="renderRoleSelection()" style="background:none; border:none; color:#888; float:left;">← Back</button>
+            <div style="clear:both;"></div>
             
-// Add this inside the renderPostForm function in ui.js
-<label style="font-size:12px; color:#888;">Select Category</label>
-<select id="post-category" style="width:100%; padding:12px; margin:8px 0 15px 0; border:1px solid #ddd; border-radius:10px; background:white;">
-    <option value="repair">Repair</option>
-    <option value="cleaning">Cleaning</option>
-    <option value="tech">Tech</option>
-    <option value="talent">Talent</option>
-</select>
-
-
-            <div class="card" style="text-align:left; padding:20px;">
-                <label style="font-size:12px; color:#888;">Title / Specialty</label>
-                <input type="text" id="post-title" placeholder="e.g. Expert Electrician" style="width:100%; padding:12px; margin:8px 0 15px 0; border:1px solid #ddd; border-radius:10px;">
+            <div style="font-size:50px; margin-top:10px;">${role === 'provider' ? '🏢' : '📅'}</div>
+            <h2 style="margin-top:10px;">${title}</h2>
+            <p style="color:#666; font-size:14px;">${subtext}</p>
+            
+            <div style="margin-top:20px; text-align:left;">
+                <label style="font-size:12px; font-weight:bold; color:#555;">FULL NAME / BUSINESS NAME</label>
+                <input type="text" id="reg-name" placeholder="Enter name" style="width:100%; padding:12px; margin:8px 0 20px 0; border-radius:8px; border:1px solid #ddd;">
                 
-                <label style="font-size:12px; color:#888;">Description</label>
-                <textarea id="post-desc" rows="4" placeholder="Describe your service or needs..." style="width:100%; padding:12px; margin:8px 0 15px 0; border:1px solid #ddd; border-radius:10px; font-family:sans-serif;"></textarea>
+                <label style="font-size:12px; font-weight:bold; color:#555;">WHATSAPP / PHONE</label>
+                <input type="tel" id="reg-phone" placeholder="+251..." style="width:100%; padding:12px; margin:8px 0 20px 0; border-radius:8px; border:1px solid #ddd;">
                 
-                <label style="font-size:12px; color:#888;">Price (ETB)</label>
-                <input type="number" id="post-price" placeholder="0.00" style="width:100%; padding:12px; margin:8px 0 20px 0; border:1px solid #ddd; border-radius:10px;">
-                
-                <button class="auth-btn" style="width:100%" onclick="submitPost('${type}')">Publish Post</button>
+                ${role === 'provider' ? `
+                    <div style="background:#f9f9f9; padding:10px; border-radius:8px; margin-bottom:20px; border-left:4px solid #2ecc71;">
+                        <small style="color:#555;">Note: Providers pay a <b>345 ETB</b> registration fee to access client leads.</small>
+                    </div>
+                ` : ''}
             </div>
+
+            <button onclick="submitRegistration('${role}')" 
+                    style="width:100%; padding:16px; background:${buttonColor}; color:white; border:none; border-radius:12px; font-weight:bold; font-size:16px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                Create My Account
+            </button>
         </div>
     `;
 }
