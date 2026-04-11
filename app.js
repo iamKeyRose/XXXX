@@ -10,53 +10,39 @@ let carouselTimers = [];
 async function init() {
     tg.ready();
     tg.expand();
-    tg.setHeaderColor('#ffffff');
-    
     const user = tg.initDataUnsafe?.user;
 
-    // 1. Safety check: Is the app actually open in Telegram?
-    if (!user || !user.id) {
-        document.getElementById('main-content').innerHTML = `
-            <div style="text-align:center; padding:50px;">
-                <h3>Access Denied</h3>
-                <p>Please open this app through the Telegram Bot.</p>
-            </div>`;
+    if (!user) {
+        document.getElementById('main-content').innerHTML = "Open in Telegram";
         return;
     }
 
     try {
-        // 2. Check the database for this specific Telegram ID
         const { data, error } = await dbClient
             .from('users')
             .select('*')
             .eq('tg_id', user.id)
             .maybeSingle();
 
-        if (error) throw error;
-
         if (data) {
-            // 3. USER EXISTS: Save their data to the session and show Dashboard
+            // User exists: Store the role and verification status
             userSession = { 
                 role: data.role, 
-                type: data.account_type, 
-                location: { city: data.city, area: data.area }, 
-                balance: data.balance || 0,
-                full_profile: data // Store the whole profile for later use
+                is_verified: data.is_verified,
+                full_profile: data 
             };
             
-            renderDashboard();
-            startAllCarousels();
+            // Redirect based on role
+            renderDashboard(); 
         } else {
-            // 4. NEW USER: Redirect them to the registration page immediately
-            renderRegistrationForm();
+            // New User: Send to role selection
+            renderRoleSelection(); 
         }
-
     } catch (err) {
-        console.error("Database connection failed:", err);
-        tg.showAlert("System busy. Please try again later.");
+        console.error(err);
+        tg.showAlert("Connection error.");
     }
 }
-
 
 function startRegistration() {
     tg.HapticFeedback.impactOccurred('light');
